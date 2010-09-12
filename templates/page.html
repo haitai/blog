@@ -1,0 +1,13 @@
+{% extends "entry.html" %}
+{% block more %}{{ entry.body|safe }}{% endblock %}
+
+{% block above_entries %}
+<div class="infomessage">
+    <a href="/">Home</a> &raquo; <a href="/archives">archives</a>
+</div>
+{% endblock %}
+
+{% block below_entries %}
+{% include "commentform.html" %}
+
+{% endblock %}

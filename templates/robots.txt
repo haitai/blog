@@ -1,0 +1,3 @@
+User-agent: *
+{%if not config.INDEXED_ALLOWED%}Disallow: /{%endif%}
+Sitemap: {{ config.BASEURL }}/sitemap.xml

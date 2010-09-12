@@ -1,0 +1,92 @@
+/* -------------------------------------------------------------------
+// markItUp!
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+.markItUp .markItUpButton1 a,
+.markItUp .markItUpButton2 a,
+.markItUp .markItUpButton3 a,
+.markItUp .markItUpButton4 a,
+.markItUp .markItUpButton5 a,
+.markItUp .markItUpButton6 a,
+.markItUp .markItUpButton7 a,
+.markItUp .markItUpButton8 a,
+.markItUp .markItUpButton9 a,
+.markItUp .markItUpButton10 a,
+.markItUp .markItUpButton11 a,
+.markItUp .markItUpButton12 a,
+.markItUp .markItUpButton13 a,
+.markItUp .markItUpButton14 a,
+.markItUp .markItUpButton15 a,
+.markItUp .clean a,
+.markItUp .preview a,
+.markItUp .table a,
+.markItUp .table-col a,
+.markItUp .table-row a,
+.markItUp .encodechars a,
+.markItUp .dateoftheday a,
+.markItUp .blockquote a,
+.markItUp .postcode a,
+.markItUp .br a,
+.markItUp .readmore a {
+  background: url(images/icons.png) no-repeat top left;
+}
+
+.markItUp .markItUpButton1 a {
+background-position: 0 -168px;}
+.markItUp .markItUpButton2 a {
+background-position: 0 -192px;}
+.markItUp .markItUpButton3 a {
+background-position: 0 -216px;}
+.markItUp .markItUpButton4 a {
+background-position: 0 -240px;}
+.markItUp .markItUpButton5 a {
+background-position: 0 -264px;}
+.markItUp .markItUpButton6 a {
+background-position: 0 -288px;}
+.markItUp .markItUpButton7 a {
+background-position: 0 -456px;}
+.markItUp .markItUpButton8 a {
+background-position: 0 -24px;}
+.markItUp .markItUpButton9 a {
+background-position: 0 -336px;}
+.markItUp .markItUpButton10 a {
+background-position: 0 -528px;}
+.markItUp .markItUpButton11 a {
+background-position: 0 -384px;}
+.markItUp .markItUpButton12 a {
+background-position: 0 -432px;}
+.markItUp .markItUpButton13 a {
+background-position: 0 -408px;}
+.markItUp .markItUpButton14 a {
+background-position: 0 -480px;}
+.markItUp .markItUpButton15 a {
+background-position: 0 -360px;}
+.markItUp .clean a {
+background-position: 0 -72px;}
+.markItUp .preview a {
+background-position: 0 -504px;}
+.markItUp .table a {
+background-position: 0 -600px; }
+.markItUp .table-col a {
+background-position: 0 -552px;}
+.markItUp .table-row a {
+background-position: 0 -576px;}
+.markItUp .encodechars a {
+background-position: 0 -144px;}
+.markItUp .dateoftheday a {
+background-position: 0 -120px;}
+.markItUp .blockquote a {
+background-position: 0 0;}
+.markItUp .postcode a {
+background-position: 0 -96px;}
+.markItUp .br a {
+background-position: 0 -48px;}
+.markItUp .readmore a {
+background-position: 0 -712px;}
+
+/* -------------------------------------------------------------------
+//.sprite-text_align_center { background-position: 0 -624px; } 
+//.sprite-text_align_justify { background-position: 0 -648px; } 
+//.sprite-text_align_left { background-position: 0 -672px; } 
+//.sprite-text_align_right { background-position: 0 -696px; } 
+// ------------------------------------------------------------------*/

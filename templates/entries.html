@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block body %}
+    {% block above_entries %}{% endblock %}
+    {% for entry in entries %}
+        <div id="{{ entry.key }}" class="{% block entry_class %}entry{% endblock %}">
+        {% ifequal entry.entrytype 'post' %}
+            {% if on_entry %}<h1>
+                <span class="entry_title">{{ entry.title }}</span>
+                {% else %}<h2><a href="{{ entry.link }}" class="entry_title">{{ entry.title }}</a>{% endif %}{% if entry.source %}<a href="{{entry.source}}" class="external"></a>{% endif %}
+                {% if admin %}
+                    <a class="hidden edit" href="/edit/{{ entry.key }}">edit</a>
+                    <a class="hidden delete" href="#">delete</a>
+                {% endif %}
+            {% if on_entry %}</h1>{% else %}</h2>{% endif %}
+
+            <div class="post_date">
+                <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
+                {%if admin%}{% ifnotequal entry.published entry.updated %}<span title="{{entry.updated}}" class="edit">Updated at {{entry.updated|date:"f A, M jS"}}</span>{% endifnotequal %}{%endif%}
+            </div>
+            <div class="body">
+                {%if on_entry%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{% block more %}{{ entry.body|safe }}{% endblock %}{%endif%}{%endif%}
+            </div>
+            <div class="meta">
+            {% if entry.tags %}
+                <div class="tags">
+                    Posted in {{entry.tags|localelist|safe}}
+                </div>
+            {% endif %}
+            {%if on_entry%}{%block shorturl%}<div class="shorturl">Permalink <a href="http://{{request.host}}/post/{{entry.key.id}}" title="Permalink to {{entry.title}}">http://{{request.host}}/post/{{entry.key.id}}</a></div>{%endblock%}
+            {%else%}
+            {% block disqus_name %}
+                {% if entry.koment %}<div class="comments">{%ifequal entry.comments_count 0%}No{%else%}{{entry.comments_count}}{%endifequal%} <a href="{{entry.link}}#comments">{%ifequal entry.comments_count 1%}comment{%else%}comments{%endifequal%}</a></div>{% else %}<span class="comments">Comments off</span>{% endif %}
+            {% endblock %}
+            {%endif%}
+            </div>
+            {% endifequal %}
+            {% ifequal entry.entrytype 'page' %}
+                {% if on_page %}<h2>
+                    <span class="entry_title">{{ entry.title }}</span>
+                    {% else %}<h2><a href="{{ entry.link }}" class="entry_title">{{ entry.title }}</a>{% endif %}{% if entry.source %}<a href="{{entry.source}}" class="external"></a>{% endif %}
+                    {% if admin %}
+                        <a class="hidden edit" href="/edit/{{ entry.key }}">edit</a>
+                        <a class="hidden deletecomment" href="#">delete</a>
+                    {% endif %}
+                {% if on_page %}</h2>{% else %}</h2>{% endif %}
+
+                <div class="post_date">
+                    <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
+                    {%if admin%}{% ifnotequal entry.published entry.updated %}<span title="{{entry.updated}}" class="edit">Updated at {{entry.updated|date:"f A, M jS"}}</span>{% endifnotequal %}{%endif%}
+                </div>
+                <div class="body">
+                    {%if on_page%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body_excerpt|safe }}{%endif%}{%endif%}
+                </div>
+            {% endifequal %}
+
+            {% ifequal entry.entrytype 'comment' %}
+            <a name="{{entry.key.id}}"></a>
+                <div class="commentgravatar"><img height="50" width="50" class="avatar avatar-50" src="{{entry.author.email|gravatar:50}}" alt=""/></div>
+                <h2>
+                    <a href="{{entry.link}}" class="comment_title">{{ entry.author.nickname }}</a> {%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
+                </h2>
+                    <div class="post_date comment_date"> said {%if entry.to_title%}on "<a href="{{ entry.to_url }}" class="">{{entry.to_title}}</a>"{%endif%} <span title="{{ entry.published }}">{{entry.published|bettertimesince}}</span></div>
+                <div class="comment_body">
+                    {%if entry.body%}{{entry.body|striptags}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
+                </div>
+            {% endifequal %}
+            {% ifequal entry.entrytype 'status' %}
+            <a name="{{entry.key.id}}"></a>
+                    <span class="status_title">{{ entry.body|striptags }}</span>
+                    <span class="comment_date"><a href="{{entry.link}}"><span title="{{ entry.published }}">{{entry.published|bettertimesince}}</span></a>  {%if admin%} <a class="hidden deletecomment" href="#">delete</a>{%endif%}</span>
+            {% endifequal %}
+        </div>
+    {% endfor %}
+    {% block below_entries %}{% endblock %}
+{% endblock %}

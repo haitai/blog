@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">
+
+  <options>
+    <clientType>WordPress</clientType>
+    <supportsKeywords>Yes</supportsKeywords>
+    <supportsSlug>Yes</supportsSlug>
+  </options>
+
+  <weblog>
+    <serviceName>WordPress</serviceName>
+    <imageUrl>images/favicon.ico</imageUrl>
+    <watermarkImageUrl>images/favicon.png</watermarkImageUrl>
+    <homepageLinkText>View site</homepageLinkText>
+    <adminLinkText>New post</adminLinkText>
+    <adminUrl>
+      <![CDATA[
+        {blog-postapi-url}/../new
+        ]]>
+    </adminUrl>
+    <postEditingUrl>
+    <![CDATA[
+        {blog-homepage-url}/edit/{post-id}
+    ]]>
+    </postEditingUrl>
+
+  </weblog>
+</manifest>

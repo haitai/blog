@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rsd xmlns="http://archipelago.phrasewise.com/rsd" version="1.0">
+  <service>
+    <engineName>Jot</engineName>
+    <engineLink>{{config.BASEURL}}</engineLink>
+    <homePageLink>{{ config.BASEURL }}</homePageLink>
+    <apis>
+      <api name="MetaWeblog" preferred="true" apiLink="{{ config.BASEURL }}/rpc" blogID="1"/>
+      <api name="Blogger" blogID="1" preferred="false" apiLink="{{ config.BASEURL }}/rpc"/>
+    </apis>
+  </service>
+</rsd>

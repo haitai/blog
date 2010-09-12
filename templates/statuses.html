@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{%if status%}saying #{{status.key.id}}{%else%}Saying{%endif%} - {% endblock %}
+{% block extra_head %}<link rel="alternate" href="/statuses/feed" type="application/atom+xml" title="Statuses from {{ config.TITLE }}"/>{% endblock %}
+
+{% block body %}
+<div class="infomessage">
+    <a href="/">Home</a> &raquo; {%if status%}<a href="/saying">saying</a>{%else%}saying{%endif%}
+</div>
+    {%if statuses%}
+    {% for status in statuses %}
+        <div class="entry summary" id="{{status.key}}">
+        <a name="{{status.key.id}}"></a>
+                <span class="status_title date">{{status.body|striptags}}</span>
+            <span class="comment_date">
+                <a href="{{status.link}}" class="">{{status.published|bettertimesince}}</a>{%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
+            </span>
+        </div>
+    {% endfor %}
+    {%else%}
+    <p>No saying here</p>
+    {%endif%}
+    {%if on_status%}{% include "commentform.html" %}{%endif%}
+    
+    <div class="navigation">
+        {% if previous %}
+                <a href="?start={{ previous }}" class="previous">&laquo; Previous</a>
+        {% endif %}
+        {% if offset %}
+                <a href="?start={{ next }}" class="next">Next &raquo;</a>
+        {% endif %}
+    </div>
+    
+{% endblock %}

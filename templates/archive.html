@@ -1,0 +1,26 @@
+{% extends "entries.html" %}
+
+{% block title %}All entries - {% endblock %}
+
+{% block entry_class %}entry summary{% endblock %}
+{% block body %}
+{% block above_entries %}{% endblock %}
+    {% for entry in entries %}
+        <div class="entry summary">
+            <h2>
+                <a href="{{ entry.link }}" class="entry_title">{{ entry.title }}</a>
+                <span class="date" title="{{ entry.published }}">
+                    - {{ entry.published|bettertimesince }}
+                </span>
+            </h2>
+            <div class="body">
+                {{ entry.body|striptags|contentshortor:100 }}
+            </div>
+            {% if entry.tags %}
+                <div class="meta"><div class="tags">
+                    Posted in {{entry.tags|localelist|safe}}
+                </div></div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

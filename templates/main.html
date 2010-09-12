@@ -1,0 +1,16 @@
+{% extends "entries.html" %}
+
+{% block entry_class %}{{ block.super }} full{% endblock %}
+
+{% block below_entries %}
+    {% if previous or offset%}
+    <div class="navigation">
+        {% if previous %}
+                <a href="?start={{ previous }}{%if order%}&order=1{%endif%}" class="previous">&laquo; Previous</a>
+        {% endif %}
+        {% if offset %}
+                <a href="?start={{ next }}{%if order%}&order=1{%endif%}" class="next">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {%endif%}
+{% endblock %}

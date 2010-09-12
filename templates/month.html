@@ -1,0 +1,9 @@
+{% extends "archive.html" %}
+
+{% block title %}{{month}} {{ year }} - {% endblock %}
+
+{% block above_entries %}
+    <div class="infomessage">
+        <a href="/">Home</a> &raquo; <a href="/{{year}}">{{year}}</a> &raquo; {{month}}
+    </div>
+{% endblock %}
