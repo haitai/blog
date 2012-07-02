@@ -763,7 +763,7 @@ class BaseRequestHandler(webapp.RequestHandler):
             except urlfetch.DownloadError:
                 pass
         # Slice here to avoid doing it in the template
-        flickr_feed["items"] = flickr_feed.get("items", [])[:20]
+        flickr_feed["items"] = flickr_feed.get("items", [])[:5]
         return flickr_feed
 
     def translate(self,sl, tl, phrase):

@@ -20,22 +20,12 @@ $(document).ready(function() {
             return
         }
         var comment = $(this).parents('.entry');
-        $.postJSON('/deleteitem', {key: comment.attr('id')}, function(data) {
+        $.postJSON('/deletecomment', {key: comment.attr('id')}, function(data) {
             if (data.success) {
                 comment.slideUp();
             }
         });
     });
-    $(".reply").click(function(){
-        var cid = $(this).attr("cid");
-        var to_url = "/comment/" + cid;
-        var to_title = "comment #" + cid;
-        $("#commentform > #content").focus();
-        $("input[name='to_url']").val(to_url);
-        $("input[name='to_title']").val(to_title);
-        return false;
-        });
-
     $("#pagesdropdown").toggle(
       function () {
         $("#menuDivdropdown").show();
