@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?py
 include('header_mobile.html')
 
@@ -57,3 +58,64 @@ var comment_delete_url = '#{{BLOG_ADMIN_RELATIVE_PATH}}comment/delete/#{article_
 <?py #endif ?>
 </script>
 <?py include('footer_mobile.html') ?>
+=======
+<?py
+include('header_mobile.html')
+
+article_id = article.key().id()
+dt = convert_to_local_time(article.time)
+tags = article.tags
+tags = ', '.join(tags) if tags else 'None'
+?>
+<div id="cnt">
+	<div class="art">
+		<p class="postmetadata">${formatted_time(article.time)}, category: #{article.category_name() or 'None'}, tags: ${tags}
+<?py if request.is_admin: ?>
+			<a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/edit/#{article_id}">[Edit]</a> <a href="#{{BLOG_ADMIN_RELATIVE_PATH}}article/delete/#{article_id}">[Delete]</a>
+<?py #endif ?>
+		</p>
+		<div class="entry">
+<?py for _ in cache_as('article:%s' % article_id, ARTICLE_CACHE_TIME): ?>
+				#{article.html_content()}
+<?py #endfor ?>
+		</div>
+	</div>
+	<div id="commentlist">
+		<ol class="commentlist"></ol>
+	</div>
+	<div class="comments">
+		<div id="cmnts">
+<?py if article.replies: ?>
+			<p class="wp-pagenavi"><a href="#{{BLOG_WAP_RELATIVE_PATH}}comment/#{article_id}/" class="nextpage">#{article.replies} comment#{'s' if article.replies > 1 else ''}</a></p>
+<?py else: ?>
+			No comment
+<?py #endif ?>
+		</div>
+	</div>
+	<div id="respond">
+		<div id="uit">
+<?py
+user = request.current_user
+if user:
+?>
+			<form action="#{{BLOG_HOME_RELATIVE_PATH}}comment/#{article_id}/?viewmode=mobile" method="post" id="commentform">
+				<p>You are login as ${user.name}, you can <a href="/logout">logout</a> to switch to another account, or <a href="#{{BLOG_HOME_RELATIVE_PATH}}profile/">modify your profile</a>.</p>
+				<p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="1"></textarea></p>
+				<p><label for="bbcode" onclick="">Use BBCode</label> <input name="bbcode" type="checkbox" id="bbcode" tabindex="2"/></p>
+				<div class="submit"><div class="outbl sbm"><input name="submit" type="submit" id="submit" tabindex="3" value="Submit"/></div></div>
+			</form>
+<?py else: ?>
+			<p>You need <a href="/login">login</a> with your Google account to comment.</p>
+<?py #endif ?>
+		</div>
+	</div>
+</div>
+<script>
+var article_id = '#{article_id}';
+var home_path = '#{{BLOG_HOME_RELATIVE_PATH}}';
+<?py if request.is_admin: ?>
+var comment_delete_url = '#{{BLOG_ADMIN_RELATIVE_PATH}}comment/delete/#{article_id}/';
+<?py #endif ?>
+</script>
+<?py include('footer_mobile.html') ?>
+>>>>>>> jot/master

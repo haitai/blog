@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 		</div>
 		<div id="ftr">
 			<span class="cp">Designed by WPSHOWER • Ported by <a href="http://www.keakon.net/" rel="nofollow">keakon</a></span>
@@ -18,4 +19,26 @@ _gaq.push(['_setCustomVar', 1, 'user', '${request.current_user.name}']);
 </script>
 <?PY #endif ?>
 </body>
+=======
+		</div>
+		<div id="ftr">
+			<span class="cp">Designed by WPSHOWER • Ported by <a href="http://www.keakon.net/" rel="nofollow">keakon</a></span>
+			<span class="md"><a href="#{request.path_qs.replace(BLOG_WAP_RELATIVE_PATH, BLOG_HOME_RELATIVE_PATH)}">Desktop mode</a></span>
+		</div>
+	</div>
+<?py if page == 'article': ?>
+<script src="/js/jquery-1.6.1.js"></script>
+<script src="/theme/iphonsta/js/comment.js"></script>
+<?py #endif ?>
+<?PY if GOOGLE_ANALYTICS_ID: ?>
+<script src="#{'http://www' if request.scheme == 'http' else 'https://ssl'}.google-analytics.com/ga.js"></script>
+<script>
+_gaq.push(['_trackEvent', 'LoadTime', '${request.client_ip}', '#{request.path_qs}', new Date() - _gaq_start]);
+<?py if hasattr(request, 'current_user') and request.current_user: ?>
+_gaq.push(['_setCustomVar', 1, 'user', '${request.current_user.name}']);
+<?py #endif ?>
+</script>
+<?PY #endif ?>
+</body>
+>>>>>>> jot/master
 </html>

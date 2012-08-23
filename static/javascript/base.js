@@ -28,12 +28,18 @@ $(document).ready(function() {
     });
     $("#pagesdropdown").toggle(
       function () {
+<<<<<<< HEAD
         $(this).addClass("menudivdrop");
+=======
+>>>>>>> jot/master
         $("#menuDivdropdown").show();
         $("#sanjiao").text("▲");
       },
       function () {
+<<<<<<< HEAD
         $(this).removeClass("menudivdrop");
+=======
+>>>>>>> jot/master
         $("#menuDivdropdown").hide();
         $("#sanjiao").text("▼");
       }
