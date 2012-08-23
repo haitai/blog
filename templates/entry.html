@@ -52,12 +52,12 @@
 $(function(){
   $(document).keydown(function(e) {
     var url = false;
-        if (e.which == 37 || e.which == 74) { // Left arrow and J
+        if (e.which == 37) { // Left arrow
         {% if entry.next %}{%for next in entry.next%}
         url = '{{next.link}}';
         {%endfor%}{% endif %}
         }
-        else if (e.which == 39 || e.which == 75) { // Right arrow and K
+        else if (e.which == 39) { // Right arrow
         {% if entry.prev %}{%for prev in entry.prev%}
         url = '{{prev.link}}';
         {%endfor%}{% endif %}
