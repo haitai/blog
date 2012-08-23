@@ -126,18 +126,11 @@ color: #111;
 background-position:-8px -102px;
 height:20px
 }
-<<<<<<< HEAD
 #menuDivdropdown{display:none;background:#f8f8f8;position:absolute;right:25px;top:43px}
 #menuDivdropdown a.menuItem{display:block;padding:3px;text-align:right;text-decoration:none}
 #menuDivdropdown a:hover{color:#000}
 #sanjiao{font-size:0.75em}
 .menudivdrop{background: #f8f8f8}
-=======
-#menuDivdropdown{display:none;background:#f8f8f8;border:1px solid #eee;position:absolute;right:25px;top:45px;width:315px}
-#menuDivdropdown a.menuItem{display:block;padding:3px;text-align:right;text-decoration:none}
-#menuDivdropdown a:hover{background:#069;color:#fff}
-#sanjiao{font-size:0.75em}
->>>>>>> jot/master
 #logo {
 font-weight:400;
 float: left;
