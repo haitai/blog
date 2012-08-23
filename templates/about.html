@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}About - {% endblock %}
+{% block disqus %}{% endblock %}
+
+{% block body %}
+<div class="box">
+<div class="infomessage">
+<a href="/">Home</a> &raquo; About
+</div>
+<p>此blog运行在<a href="http://code.google.com/appengine">Google Appengine</a>平台之上，页面采用<a href="http://developer.yahoo.com/yui/grids/">Yahoo! YUI</a>布局，图标来源于<a href="http://famfamfam.com/lab/icons/silk/">famfamfam</a>。</p><p>请访问<a href="http://www.huhaitai.com">我的主页</a>获取关于我的更多消息，或者使用下面的表单和我联系。</p>
+    {% ifequal config.EMAIL "you@foo.com" %}
+        <p>I'm sorry.  The administrator of this blog hasn't set his or her e-mail yet.</p>
+        <p>This poses a conundrum.  How are you to let the blog author know this blog is
+           improperly setup when this blog contact form is the only way you can reach the author?</p>
+        <p>Most vexing.  I haven't got a clue.  You might want to try Facebook or a general Google search
+           to see if the author has a public contact address.</p>
+    </div>
+    {% else %}
+    {%if success %}<div id="notification">
+            谢谢你的信息。现在<a href="/">返回首页</a>
+        </div>
+    {% endif %}
+    <h3>Contact me:</h3>
+    <form id="contactform" action="/about" method="post">
+        <p><input type="text" id="author" name="author" size="22" tabindex="1" value="{{ nickname }}"/>
+            <label for="author"><small>Name</small></label></p>
+        <p><input type="text" id="email" name="email" size="22" tabindex="2" value="{{ email }}"/>
+            <label for="email"><small>Email</small></label></p>
+        <p><input type="text" id="subject" name="subject" size="22" tabindex="3" />
+            <label for="subject"><small>Subject</small></label></p>
+        <p style="display:none"><input type="text" id="website" name="website" size="22" tabindex="3" />
+            <label for="website"><small>Website</small></label></p>
+        <p><textarea id="message" name="message" cols="60" rows="10" tabindex="4">Please enter a message.</textarea></p>
+        <p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit" /></p>
+        <input type="hidden" name="curtime" value="{{ curtime|floatformat }}" />
+    </form>
+    {% endifequal %}
+</div>
+
+{% endblock %}

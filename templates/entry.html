@@ -1,0 +1,72 @@
+{% extends "main.html" %}
+
+{% block title %}{{ entry.title }} - {% endblock %}
+{% block commentform %}{% endblock %}
+{% block entry_class %}{{ block.super }} permalink{% endblock %}
+{% block more %}{{ entry.body|safe }}{% endblock %}
+{% block above_entries %}
+    <div class="infomessage">
+        <a href="/">Home</a> &raquo; <a href="/{{entry.year}}">{{entry.year}}</a> &raquo; <a href="/{{entry.year}}/{{entry.month}}">{{month}}</a>
+    </div>
+    {% if invalid %}
+        <p>
+            <a style="color: red; font-weight: bold;" href="http://validator.w3.org/check?url={% filter urlencode %}http://{{ request.host }}{{ entry.link}}{% endfilter %}" class="external">Invalid XHTML!</a>
+        </p>
+    {% endif %}
+{% endblock %}
+{%block shorturl%}<div class="shorturl">Permalink <a href="http://{{request.host}}/u/{{entry.key.id}}" title="Permalink to {{entry.title}}">http://{{request.host}}/u/{{entry.key.id}}</a></div>{%endblock%}
+{% block disqus_name %}
+    <!-- {% if entry.koment %}<div class="comments"><a href="#comments">Leave a comment</a></div>{% else %}<span class="comments">Comments off</span>{% endif %} -->
+{% endblock %}
+{% block below_entries %}
+{% if on_entry and entry.relateposts%}
+    <div class="box">
+        <h3>Related entries</h3>
+        <ul class="related">
+        {% for entry in entry.relateposts %}
+            <li class="entry">
+                <a href="{{ entry.link }}">{{ entry.title }}</a>
+                <span class="date" title="{{ entry.published }}">
+                </span>
+            </li>
+        {% endfor %}
+        </ul><div style="clear:both"></div>
+
+    </div>
+{% endif %}
+{% include "commentform.html" %}
+{% if entry.next or entry.prev%}
+<div class="navigation">
+    {% if entry.next %}
+        {%for next in entry.next%}
+        <a href="{{next.link}}"  class="previous">&laquo; {{next.title}}</a>
+        {%endfor%}
+    {% endif %}
+    {% if entry.prev %}
+        {%for prev in entry.prev%}
+        <a href="{{prev.link}}"  class="next">{{prev.title}} &raquo;</a>
+        {%endfor%}
+    {% endif %}
+</div>
+<<script type="text/javascript">
+$(function(){
+  $(document).keydown(function(e) {
+    var url = false;
+        if (e.which == 37 || e.which == 74) { // Left arrow and J
+        {% if entry.next %}{%for next in entry.next%}
+        url = '{{next.link}}';
+        {%endfor%}{% endif %}
+        }
+        else if (e.which == 39 || e.which == 75) { // Right arrow and K
+        {% if entry.prev %}{%for prev in entry.prev%}
+        url = '{{prev.link}}';
+        {%endfor%}{% endif %}
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})
+</script>
+{%endif%}
+{% endblock %}

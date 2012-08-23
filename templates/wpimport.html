@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Import - {% endblock %}
+
+{% block body %}
+<div class="infomessage">
+    <a href="/">Home</a> &raquo; Wordpress Import
+</div>
+
+<p>Please select a file which exported from wordpress to import!</p>
+
+<form action="" method='post' enctype="multipart/form-data" >
+    <p>Wordpress export file (WXR file):
+    <input type="file" name="wpfile"></p>
+    <p><input type="submit" value="Import"/></p>
+</form>
+
+<p>You can also export your blog items(posts and pages, comments and statuses are not included) as  WordPress eXtended RSS file</p>
+<form action="/export/jot.xml" method='get'>
+    <input type="submit" value="Export" />
+</form>
+
+{%endblock%}

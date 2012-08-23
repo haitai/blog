@@ -1,0 +1,48 @@
+application: hht
+version: beta1
+runtime: python
+api_version: 1
+
+skip_files: |
+ ^(.*/)?(
+ (.*/\.svn/.*)|
+ (.*\.py[co])|
+ (.*/Thumbs\.db)|
+ )$
+
+default_expiration: "3650d"
+
+inbound_services:
+- mail
+- xmpp_message
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /rpc|/rpc|rsd.xml
+  script: api_rpc.py
+
+- url: /favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
+  mime_type: image/x-icon
+
+- url: /gadget.xml
+  static_files: gadget.xml
+  upload: gadget.xml
+
+- url: /zipme
+  script: zipme.py
+  login: admin
+
+- url: /_ah/mail/.+
+  script: main.py 
+  login: admin
+
+- url: /admin/.*|/admin
+  script: $PYTHON_LIB/google/appengine/ext/admin 
+  login: admin
+
+- url: /.*
+  script: main.py

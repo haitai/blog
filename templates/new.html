@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}New Item - {% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="/static/markitup/skins/simple/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/markitup/sets/html/style.css" />
+
+<script type="text/javascript" src="/static/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="/static/markitup/sets/html/set.js"></script>
+{% endblock %}
+
+{% block body %}
+<div class="infomessage" id="hideside">
+    <a href="/">Home</a> &raquo; <span title="You can click here to hide/show the header and the sidebar">Write</span>
+</div>
+
+<script type="text/javascript" >
+   $(document).ready(function() {
+      $("#id_body").markItUp(mySettings);
+   });
+</script>
+    <form id="new" method="post">
+        <table>
+            {{ form.as_table }}
+            <tr><th><label for="id_entrytype">Entrytype:</label></th><td>
+            <select id="id_entrytype" name="entrytype">
+            {%ifequal entry.entrytype "post"%}
+            <option selected="selected" value="post">post</option>
+            {%else%}
+            <option value="post">post</option>
+            {%endifequal%}
+            {%ifequal entry.entrytype "page"%}
+            <option selected="selected" value="page">page</option>
+            {%else%}
+            <option value="page">page</option>
+            {%endifequal%}
+            </select>
+            Format:
+            <select id="id_body_format" name="body_format">
+            {%ifequal entry.body_format "html"%}
+            <option selected="selected" value="html">HTML</option>
+            {%else%}
+            <option value="html">HTML</option>
+            {%endifequal%}
+            {%ifequal entry.body_format "markdown"%}
+            <option selected="selected" value="markdown">Markdown</option>
+            {%else%}
+            <option value="markdown">Markdown</option>
+            {%endifequal%}
+            {%ifequal entry.body_format "textile"%}
+            <option selected="selected" value="textile">Textile</option>
+            {%else%}
+            <option value="textile">Textile</option>
+            {%endifequal%}
+            {%ifequal entry.body_format "txt"%}
+            <option selected="selected" value="txt">Plain Text</option>
+            {%else%}
+            <option value="txt">Plain Text</option>
+            {%endifequal%}
+            </select>
+            </td></tr>
+            <tr>
+                <th>Tags:</th>
+                <td>
+                    <input type="text" name="tags" value="{{ tags }}" title="Tags (comma-separated)"/>
+                    (Comma separated)
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td>
+                    <div style="margin-top: 1em;">
+                        <input type="submit" value="{% block submit_value %}Post{% endblock %}"/>
+                        <a style="margin-left: .5em;" href="{% block cancel_link %}/{% endblock %}">Cancel</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}
+{% block disqus %}{% endblock %}
