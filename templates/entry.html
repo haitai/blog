@@ -48,25 +48,5 @@
         {%endfor%}
     {% endif %}
 </div>
-<script type="text/javascript">
-$(function(){
-  $(document).keydown(function(e) {
-    var url = false;
-        if (e.which == 37) { // Left arrow
-        {% if entry.next %}{%for next in entry.next%}
-        url = '{{next.link}}';
-        {%endfor%}{% endif %}
-        }
-        else if (e.which == 39) { // Right arrow
-        {% if entry.prev %}{%for prev in entry.prev%}
-        url = '{{prev.link}}';
-        {%endfor%}{% endif %}
-        }
-        if (url) {
-            window.location = url;
-        }
-  });
-})
-</script>
 {%endif%}
 {% endblock %}

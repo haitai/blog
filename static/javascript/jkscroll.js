@@ -9,7 +9,7 @@ Email: doomvan@163.com
 var SCROLL_LEFT_RIGHT_WIDTH = 0;
 
 //scroll up/down 100 pixels by default
-var SCROLL_DOWN_UP_HEIGHT = 100;
+var SCROLL_DOWN_UP_HEIGHT = 200;
 
 function scrollDown() {
 	window.scrollBy(SCROLL_LEFT_RIGHT_WIDTH, SCROLL_DOWN_UP_HEIGHT)
@@ -65,3 +65,20 @@ window.onload = function() {
 		element.attachEvent("onkeydown", scroll);
 	}
 }
+$(function(){
+  $(document).keydown(function(e) {
+    var url = false;
+        if (e.which == 65) {
+        url = '/archives';
+        }
+        else if (e.which == 67) {
+        url = '/comments';
+        }
+        else if (e.which == 83) {
+        url = '/saying';
+        }
+        if (url) {
+            window.location = url;
+        }
+  });
+})

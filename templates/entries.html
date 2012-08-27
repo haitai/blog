@@ -16,7 +16,7 @@
 
             <div class="post_date">
                 <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
-                {%if admin%}{% ifnotequal entry.published entry.updated %}<span title="{{entry.updated}}" class="edit">Updated at {{entry.updated|date:"f A, M jS"}}</span>{% endifnotequal %}{%endif%}
+                {% ifnotequal entry.published entry.updated %}<span title="{{entry.updated}}" class="edit">Updated at {{entry.updated|date:"f A, M jS"}}</span>{% endifnotequal %}
             </div>
             <div class="body">
                 {%if on_entry%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{% block more %}{{ entry.body|safe }}{% endblock %}{%endif%}{%endif%}

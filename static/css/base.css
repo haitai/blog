@@ -14,7 +14,6 @@ font: 14px 'Trebuchet MS',Tahoma,Georgia,serif,Helvetica, sans-serif !important;
 width:100%;
 background:#f8f8f8;
 }
-
 #commentform p{
 padding-top:15px
 }
@@ -88,37 +87,37 @@ table td {
 vertical-align:top
 }
 
-#hd{background:#f2f2f2;border-bottom:3px solid #eee}
 #header {
 position:relative;
-height:42px;
-padding:25px 0
+height:46px;
+border-bottom:3px solid #eee;
+background:#f2f2f2;
 }
 
 #menu {
 float: right;
-padding-right:5px
 }
 
 #menu li {
 float: left;
-padding: 0 20px;
-
+margin-bottom: 0;
+font: 14px/46px 'Trebuchet MS',Tahoma,Georgia
 }
 #menu li.selected a{
 color:#444;
-border-bottom:2px solid #666
-}
+font-weight:bold }
 #menu a {
 display: block;
 text-decoration: none;
 text-align: center;
 text-transform: lowercase;
 color: #000;
+padding: 0 25px
 }
 
 #menu a:hover {
 color: #111;
+background: #eee
 }
 
 .feed {margin-left:10px}
@@ -126,15 +125,14 @@ color: #111;
 background-position:-8px -102px;
 height:20px
 }
-#menuDivdropdown{display:none;background:#f8f8f8;position:absolute;right:25px;top:43px}
-#menuDivdropdown a.menuItem{display:block;padding:3px;text-align:right;text-decoration:none}
-#menuDivdropdown a:hover{color:#000}
+#menuDivdropdown{display:none;background:#eee;position:absolute;right:0;top:49px;z-index: 2}
+#menuDivdropdown a.menuItem{display:block;padding:0 25px;text-align:right;text-decoration:none}
+#menuDivdropdown a:hover{background: #f2f2f2}
 #sanjiao{font-size:0.75em}
-.menudivdrop{background: #f8f8f8}
 #logo {
 font-weight:400;
 float: left;
-padding: 0px 0 0 25px;
+padding: 5px 0 0 25px;
 font-size:2.2em;
 font-family:'Trebuchet MS',Tahoma,Georgia,"Times New Roman",Times,serif;
 }
