@@ -6,14 +6,14 @@
             <input type="hidden" name="to_url" value="{{ curturl }}" />
             <input type="hidden" name="to_title" value="{{ comment_title }}" />
                 <textarea id="content" width="100%"name="content" rows="3"></textarea>
-                <p><input name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /> or <a href="/logout">sign out</a></p>
+                <p><input name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /></p>
             </form>{%endif%}
             {%else%}{%if entry.koment%}
             {%if logined%}<form id="commentform" action="{%if on_new%}/poststatus{%else%}/postcomment{%endif%}" method="post">
             <input type="hidden" name="to_url" value="{{ curturl }}" />
             <input type="hidden" name="to_title" value="{{ comment_title }}" />
                 <textarea id="content" width="100%"name="content" rows="3"></textarea>
-                <p><input name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /> or <a href="/logout">sign out</a></p>
+                <p><input name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /></p>
             </form>{%endif%}
             {%endif%}
             {%endif%}

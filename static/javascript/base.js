@@ -26,16 +26,6 @@ $(document).ready(function() {
             }
         });
     });
-    $("#pagesdropdown").toggle(
-      function () {
-        $("#menuDivdropdown").show();
-        $("#sanjiao").text("▲");
-      },
-      function () {
-        $("#menuDivdropdown").hide();
-        $("#sanjiao").text("▼");
-      }
-    );
 
     var b=jQuery("#yui-main > .yui-b"),
     d=jQuery("#sidebar");

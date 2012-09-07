@@ -22,17 +22,37 @@
 <div id="doc3" class="yui-t6">
    <div id="hd">
    <div id="header">
-   {% if not on_entry %}<h1 id="logo">{% else %}<h2 id="logo">{% endif %}{% if config.TITLE %}<a href="/">{{ config.TITLE }}</a>{% endif %}{% if not on_entry %}</h1>{% else %}</h2>{% endif %} <span class="feed"><a href="{%if config.FEED_SMITH %}{{config.FEED_SMITH}}{%else%}/feed{%endif%}"></a></span>
-   <div id="menu">
-   <ul>
+   {% if not on_entry %}<h1 id="logo">{% else %}<h2 id="logo">{% endif %}{% if config.TITLE %}<a href="/">{{ config.TITLE }}</a>{% endif %}{% if not on_entry %}</h1>{% else %}</h2>{% endif %} <span class="feed"><a href="{%if config.FEED_SMITH %}{{config.FEED_SMITH}}{%else%}/feed{%endif%}"></a></span>   <div style="clear:both"></div>
+  {% block search %}
+            <div id="searchbox">
+              <form action="/search" id="gsearchbox">
+                  <input type="text" name="q" id="input_search" class="gsc-input"/>
+                  <input type="hidden" value="Search" />
+              </form>
+            </div>
+        {% endblock %}
+   <div class="gc-social">
+        {%if not logined %}<span class="signed-out">
+      <a class="button" id="loginLink" href="/login">Sign in</a>
+    </span>{%else%}
+    <span class="signed-in">
+      <div>
+        <a href="https://plus.google.com/me" class="email">{{logined.email}}</a>
+        <a href="/logout">Sign out</a>
+      </div>
+      <img src="{{logined.email|gravatar:30}}">
+    </span>{%endif%}
+    
+  </div>
+   <div id="menu"><ul >
+   <li class="item{% if on_homepage %} selected{% endif %}"><a href="/">Home</a></li>
    <li class="item{% if on_archive %} selected{% endif %}"><a href="/archives">Archives</a></li>
    <li class="item{% if on_comments %} selected{% endif %}"><a href="/comments">Comments</a></li>
    <li class="item{% if on_statuses %} selected{% endif %}"><a href="/saying">Saying</a></li>
-   {%if pages%}<li class="item menuDiv"><a href="#" id="pagesdropdown">Pages<span id="sanjiao">▼</span></a>
-      <div id="menuDivdropdown">{%for page in pages%}<a class="menuItem" href="{{page.link}}">{{page.title}}</a>{%endfor%}</div></li>{%endif%}
-   </ul>
+   {%if pages%}<li class="item menuDiv"><a href="#" id="pagesdropdown">Pages</a>
+      <ul id="menuDivdropdown">{%for page in pages%}<li><a class="menuItem" href="{{page.link}}">{{page.title}}</a></li>{%endfor%}</ul></li>{%endif%}
+   </ul></div>
    <div style="clear:both"></div>
-   </div>
    </div>
    </div>
    <div id="bd">
@@ -46,15 +66,7 @@
     </div>
     <div class="yui-b">
       <div id="sidebar" class="right">
-        {% block search %}
-            <div class="box">
-                <h3>Search</h3>
-              <form action="/search" id="searchbox">
-                  <input type="text" name="q" id="input_search" class="gsc-input"/>
-                  <input type="hidden" value="Search" />
-              </form>
-            </div>
-        {% endblock %}
+
         {%block commentform%}
         {% include "commentform.html" %}
         {%endblock%}
@@ -163,9 +175,7 @@
         <a href="mailto:{{ config.EMAIL }}">{{ config.NAME }}</a> -
         {% endif %}-->
         {% if admin %}
-            - <a class="new" href="/new">New</a> - <a href="/import_wp">Import</a> - <a href="/settings">Settings</a>{% endif %} {% if logined %}- <a href="/logout">Logout</a>
-
-        {% endif %}
+            - <a class="new" href="/new">New</a> - <a href="/import_wp">Import</a> - <a href="/settings">Settings</a>{% endif %}
 </span>
 <span id="appengine"><a href="http://www.python.org/" title="Python Powered" class="python">Python</a><a href="http://code.google.com/appengine" title="Powered by Google App Engine" class="gae">Google Appengine</a></span></div></div>
 </div>
