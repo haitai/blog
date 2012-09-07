@@ -17,7 +17,7 @@ background:#f8f8f8;
 #commentform p{
 padding-top:15px
 }
-
+.cmtdate{color: #666}
 #doc3 {margin:0 !important}
 
 ::-moz-selection{background:#000;color:#f8f8f8;}
@@ -271,7 +271,7 @@ font-weight:400
 clear:both;
 padding-bottom:1.2em;
 margin-bottom:1.2em;
-border-bottom:1px solid #eee
+border-bottom:1px solid #ddd
 }
 
 .entry.full a.entry_title,.entry.full span.entry_title,a.comment_title {
@@ -327,13 +327,13 @@ color:#666;
 }
 .entry .meta a,.comment_date a{
 color:#666;
-border-bottom:1px dotted
+background: #eee}
+.entry .meta{height: 20px;margin-top: 1.2em
 }
-.entry .meta{
-}
+
+.entry .tags,.entry .comments,.entry .shorturl{padding-right: 20px;float: left;}
 .entry .tags {
 background-position:-8px -264px;
-margin-bottom:5px
 }
 
 .tags .atag {
@@ -390,7 +390,7 @@ line-height:1.7em
 }
 
 .entry .comments {
-background-position:-8px -40px
+background-position:-8px -40px;
 }
 
 ul.relatedcomments li.pagecomment{
@@ -468,7 +468,7 @@ line-height:180%
 float:right
 }
 #ft{background:#fff;
-border-top:3px solid #eee
+border-top:1px solid #eee
 }
 #footer {
 color:#000;
