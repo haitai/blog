@@ -9,7 +9,8 @@
                 <span class="entry_title">{{ entry.title }}</span>
                 {% else %}<h2><a href="{{ entry.link }}" class="entry_title">{{ entry.title }}</a>{% endif %}{% if entry.source %}<a href="{{entry.source}}" class="external"></a>{% endif %}
                 {% if admin %}
-                    <a class="hidden edit" href="/edit/{{ entry.key }}">edit</a>
+                    <a class="hidden edit" href="/edit/{{ entry.key }}">clean edit</a>
+                    <a class="hidden edit" href="/edit/{{ entry.key }}?diff=1">diff edit</a>
                     <a class="hidden delete" href="#">delete</a>
                 {% endif %}
             {% if on_entry %}</h1>{% else %}</h2>{% endif %}

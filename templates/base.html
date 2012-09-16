@@ -49,7 +49,7 @@
    <li class="item{% if on_archive %} selected{% endif %}"><a href="/archives">Archives</a></li>
    <li class="item{% if on_comments %} selected{% endif %}"><a href="/comments">Comments</a></li>
    <li class="item{% if on_statuses %} selected{% endif %}"><a href="/saying">Saying</a></li>
-   {%if pages%}<li class="item menuDiv"><a href="#" id="pagesdropdown">Pages</a>
+   {%if pages%}<li class="item" id="menuDiv"><a href="#" id="pagesdropdown">Pages</a>
       <ul id="menuDivdropdown">{%for page in pages%}<li><a class="menuItem" href="{{page.link}}">{{page.title}}</a></li>{%endfor%}</ul></li>{%endif%}
    </ul></div>
    <div style="clear:both"></div>

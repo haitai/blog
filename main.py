@@ -14,6 +14,7 @@ import string
 import urlparse
 from email.header import decode_header
 #from email.utils import parseaddr
+import difflib
 
 from lib import pubsubhubbub_publish as pshb
 from lib import BeautifulSoup,markdown2,textile
@@ -108,7 +109,20 @@ class MediaRSSFeed(feedgenerator.Atom1Feed):
             handler.addQuickElement("media:thumbnail", "", thumbnail)
             handler.endElement("media:group")
 
-
+def show_diff(seqm):
+    output= []
+    for opcode, a0, a1, b0, b1 in seqm.get_opcodes():
+        if opcode == 'equal':
+            output.append(seqm.a[a0:a1])
+        elif opcode == 'insert':
+            output.append("<ins>" + seqm.b[b0:b1] + "</ins>")
+        elif opcode == 'delete':
+            output.append("<del>" + seqm.a[a0:a1] + "</del>")
+        elif opcode == 'replace':
+            output.append( "<del>"+ seqm.a[a0:a1] + "</del><ins>" + seqm.b[b0:b1] + "</ins>" )
+        else:
+            raise RuntimeError, "unexpected opcode"
+    return ''.join(output)
 class Blogentry(db.Model):
     author = db.UserProperty()
     title = db.StringProperty()
@@ -1053,7 +1067,8 @@ class NewBlogentryHandler(BaseRequestHandler):
             entrytype = self.request.get("entrytype")
             body_format = self.request.get("body_format")
             body = self.request.get("body")
-            body_html = to_html(body,body_format)
+            diff = self.request.get("diff")
+            #body_html = to_html(body,body_format)
             if key:
                 try:
                     entry = db.get(key)
@@ -1066,8 +1081,13 @@ class NewBlogentryHandler(BaseRequestHandler):
                     if self.get_entry_from_slug(slug=slug):
                         slug += "-" + uuid.uuid4().hex[:4]
                 entry.slug = slug
-                entry.body = body
-                entry.body_html = body_html
+                if diff:
+                    sm= difflib.SequenceMatcher(None, entry.body.encode("utf8"), body.encode("utf8"))
+                    entry.body = (show_diff(sm)).decode("utf8")#body
+                    entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')#body_html
+                else:
+                    entry.body = body
+                    entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
                 if entrytype  != entry.entrytype:
                     if entrytype == "post":
                         self.update_tags_and_archives(entry,values=tags,add=True)
@@ -1093,7 +1113,7 @@ class NewBlogentryHandler(BaseRequestHandler):
                 entry = Blogentry(
                     author=users.get_current_user(),
                     body=self.request.get("body"),
-                    body_html = body_html,
+                    body_html = to_html(body,body_format),#body_html,
                     title=self.request.get("title"),
                     slug=slug,
                 )

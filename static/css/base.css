@@ -1,7 +1,8 @@
 body {
 background:#f8f8f8;
 }
-
+ins {color: #008800}
+del{color: #880000}
 body,input,textarea,#dsq-content {
 color:#000;
 font: 14px 'Trebuchet MS',Tahoma,Georgia,serif,Helvetica, sans-serif !important;
@@ -179,9 +180,11 @@ text-decoration: underline
 background-position:-8px -102px;
 height:20px
 }
-#menuDivdropdown{display:none;background:#444;position:absolute;right:0;top:46px;z-index: 2}
+#menuDiv:hover{background: #fff}
+#menuDiv:hover a{color: #000}
+#menuDivdropdown{display:none;background:#fff;position:absolute;right:0;top:46px;z-index: 2;box-shadow: 5px 5px 5px #ccc;-moz-box-shadow:5px 5px 5px #ccc;-webkit-box-shadow:5px 5px 5px #ccc}
 #menuDivdropdown a.menuItem{display:block;padding:0 25px;text-align:right;text-decoration:none}
-#menuDivdropdown a:hover{background: #444}
+#menuDivdropdown a:hover{background: #fff}
 #logo {
 font-weight:400;
 float: left;
