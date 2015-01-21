@@ -18,6 +18,7 @@ background:#f8f8f8;
 #commentform p{
 padding-top:15px
 }
+.replycomments{margin-left: 12px}
 .cmtdate{color: #666}
 #doc3 {margin:0 !important}
 
@@ -574,3 +575,8 @@ background-position:-8px -264px;
 #tagcloud li.t3 a {font-size:110%; }
 #tagcloud li.t4 a {font-size:120%; }
 #tagcloud li.t5 a {font-size:130%; }
+.seinpt{margin-bottom: 10px}
+.seinpt p{width:300px;float: left;font-size: 13px}
+.seinpt input{width: 400px;padding: 4px}
+.section h2{margin-bottom: 2em !important}
+.save input{font-size: 14px}

@@ -9,7 +9,7 @@
 <a href="/">Home</a> &raquo; About
 </div>
 <p>此blog运行在<a href="http://code.google.com/appengine">Google Appengine</a>平台之上，页面采用<a href="http://developer.yahoo.com/yui/grids/">Yahoo! YUI</a>布局，图标来源于<a href="http://famfamfam.com/lab/icons/silk/">famfamfam</a>。</p><p>请访问<a href="http://www.huhaitai.com">我的主页</a>获取关于我的更多消息，或者使用下面的表单和我联系。</p>
-    {% ifequal config.EMAIL "you@foo.com" %}
+    {% if config.EMAIL== "you@foo.com" %}
         <p>I'm sorry.  The administrator of this blog hasn't set his or her e-mail yet.</p>
         <p>This poses a conundrum.  How are you to let the blog author know this blog is
            improperly setup when this blog contact form is the only way you can reach the author?</p>
@@ -35,7 +35,7 @@
         <p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit" /></p>
         <input type="hidden" name="curtime" value="{{ curtime|floatformat }}" />
     </form>
-    {% endifequal %}
+    {% endif %}
 </div>
 
 {% endblock %}

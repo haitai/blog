@@ -22,7 +22,7 @@
         <div class="box months">
             <h3>Archives</h3><ul>
             {% for month in all_months %}
-                <li class="month"><div><a onclick="toggle(this);" href="javascript:void(0);" class="closed-button"></a> <a href="{{ month.link }}" class="montha">{{ month.monthyear }}</a>{% if config.SHOW_ENTRYCOUNT %} <span class="entrycount">({{month.entrycount}})</span>{% endif %}</div>
+                <li class="month"><div><a onclick="toggle(this);" href="javascript:void(0);" class="closed-button"></a> <a href="{{ month.link() }}" class="montha">{{ month.monthyear }}</a>{% if config.SHOW_ENTRYCOUNT %} <span class="entrycount">({{month.entrycount}})</span>{% endif %}</div>
                     <ul class="month_entries">{%for entry in month.entries%}<li>{{entry.day}}: <a href="{{ entry.link }}" class="entry_title">{{ entry.title }}</a>  <span class="entrycount">({{entry.comments_count}})</span></li>{%endfor%}</ul></li>
             {% endfor %}</ul>
         </div>

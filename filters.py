@@ -3,10 +3,8 @@ import hashlib,urllib#,md5
 
 #from django.template.defaultfilters import timesince
 from django.conf import settings
-from google.appengine.ext import webapp
-
-register = webapp.template.create_template_register()
-
+import urllib
+from markupsafe import Markup
 UTC_OFFSET = getattr(settings, "UTC_OFFSET", 0)
 def bettertimesince(dt):
     #delta = datetime.datetime.utcnow() - dt
@@ -38,14 +36,12 @@ def bettertimesince(dt):
         return local_dt.strftime("%B %d at %I:%M %p")
     else:
         return local_dt.strftime("%B %d, %Y")
-register.filter(bettertimesince)
 
 def contentshortor(c, n):
     if len(c) > int(n):
         return c[:n] + "..."
     else:
         return c
-register.filter(contentshortor)
 
 def localelist(tags):
     parts = []
@@ -59,17 +55,23 @@ def localelist(tags):
     if len(parts) == 2:
         return "%s and %s" %(parts[0],parts[1])
     return "%s and %s" % (comma.join(parts[:-1]),parts[len(parts) - 1])
-register.filter(localelist)
 
 def restrict_to_max(value,max):
     if int(value) <= int(max):
         return value
     else:
         return max
-register.filter(restrict_to_max)
 
 def gravatar(email,size):
     imgurl = "http://www.gravatar.com/avatar/"
     imgurl +=hashlib.md5(email).hexdigest()+"?"+ urllib.urlencode({'s':str(size),'r':'G'})
     return imgurl
-register.filter(gravatar)
+    
+def date(value,format):
+    return value.strftime(format)
+def urlencode_filter(s):
+    if type(s) == 'Markup':
+        s = s.unescape()
+    s = s.encode('utf8')
+    s = urllib.quote_plus(s)
+    return Markup(s)

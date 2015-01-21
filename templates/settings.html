@@ -6,18 +6,14 @@
 </div>
 
     <form id="new" class="settings" method="post">
-        <table>
-            {{ form.as_table }}
-            <tr>
-                <th></th>
-                <td>
-                    <div style="margin-top: 1em;">
-                        <input type="submit" value="Save"/>
-                        <a style="margin-left: .5em;" href="/">Cancel</a>
-                    </div>
-                </td>
-            </tr>
-        </table>
+        {% for w in form %}
+        <div class="seinpt"><p>{{w.name|lower}}</p>
+        {{w}}</div><div style="clear:both"></div>
+        {%endfor%}
+        <div style="margin-top: 1em;">
+            <input type="submit" value="Save"/>
+            <a style="margin-left: .5em;" href="/">Cancel</a>
+        </div>
     </form>
 {% endblock %}
 {% block disqus %}{% endblock %}

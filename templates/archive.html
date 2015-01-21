@@ -14,7 +14,7 @@
                 </span>
             </h2>
             <div class="body">
-                {{ entry.body|striptags|contentshortor:100 }}
+                {{ entry.body|striptags|contentshortor(100) }}
             </div>
             {% if entry.tags %}
                 <div class="meta"><div class="tags">

@@ -20,42 +20,45 @@
 </script>
     <form id="new" method="post">
         <table>
-            {{ form.as_table }}
+                    {% for w in form %}
+        <div class="seinpt"><p>{{w.name|lower}}</p>
+        {{w}}</div><div style="clear:both"></div>
+        {%endfor%}
             <tr><th><label for="id_entrytype">Entrytype:</label></th><td>
             <select id="id_entrytype" name="entrytype">
-            {%ifequal entry.entrytype "post"%}
+            {%if entry.entrytype== "post"%}
             <option selected="selected" value="post">post</option>
             {%else%}
             <option value="post">post</option>
-            {%endifequal%}
-            {%ifequal entry.entrytype "page"%}
+            {%endif%}
+            {%if entry.entrytype== "page"%}
             <option selected="selected" value="page">page</option>
             {%else%}
             <option value="page">page</option>
-            {%endifequal%}
+            {%endif%}
             </select>
             Format:
             <select id="id_body_format" name="body_format">
-            {%ifequal entry.body_format "html"%}
+            {%if entry.body_format== "html"%}
             <option selected="selected" value="html">HTML</option>
             {%else%}
             <option value="html">HTML</option>
-            {%endifequal%}
-            {%ifequal entry.body_format "markdown"%}
+            {%endif%}
+            {%if entry.body_format== "markdown"%}
             <option selected="selected" value="markdown">Markdown</option>
             {%else%}
             <option value="markdown">Markdown</option>
-            {%endifequal%}
-            {%ifequal entry.body_format "textile"%}
+            {%endif%}
+            {%if entry.body_format== "textile"%}
             <option selected="selected" value="textile">Textile</option>
             {%else%}
             <option value="textile">Textile</option>
-            {%endifequal%}
-            {%ifequal entry.body_format "txt"%}
+            {%endif%}
+            {%if entry.body_format== "txt"%}
             <option selected="selected" value="txt">Plain Text</option>
             {%else%}
             <option value="txt">Plain Text</option>
-            {%endifequal%}
+            {%endif%}
             </select>
             </td></tr>
             <tr>

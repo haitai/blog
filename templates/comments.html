@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{%if comment%}comment #{{comment.key.id}}{%else%}Comments{%endif%} - {% endblock %}
+{% block title %}{%if comment%}comment #{{comment.key().id()}}{%else%}Comments{%endif%} - {% endblock %}
 {% block extra_head %}<link rel="alternate" href="/comments/feed" type="application/atom+xml" title="Comments from {{ config.TITLE }}"/>{% endblock %}
 
 {% block body %}
@@ -9,11 +9,11 @@
 </div>
     {%if comments%}
     {% for comment in comments %}
-        <div class="entry summary" id="{{comment.key}}">
-        <a name="{{comment.key.id}}"></a>
-            <div class="gravatar"><img height="64" width="64" class="avatar" src="{{comment.author.email|gravatar:64}}" alt=""/></div>
+        <div class="entry summary" id="{{comment.key()}}">
+        <a name="{{comment.key().id()}}"></a>
+            <div class="gravatar"><img height="64" width="64" class="avatar" src="{{comment.author.email()|gravatar(64)}}" alt=""/></div>
             <h2>
-                <a href="{{comment.link}}" class="entry_title">{{ comment.author.nickname }}</a></h2><span class="cmtdate">said {%if comment.to_title%}on "<a href="{{ comment.to_url }}">{{comment.to_title}}</a>"{%endif%} {{comment.published|bettertimesince}}{%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}</span>
+                <a href="{{comment.link}}" class="entry_title">{{ comment.author.nickname() }}</a></h2><span class="cmtdate">said {%if comment.to_title%}on "<a href="{{ comment.to_url }}">{{comment.to_title}}</a>"{%endif%} {{comment.published|bettertimesince}}{%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}</span>
 
             <div class="comments_body">
                 {%if comment.body%}{{comment.body|striptags}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}

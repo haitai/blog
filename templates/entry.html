@@ -2,19 +2,18 @@
 
 {% block title %}{{ entry.title }} - {% endblock %}
 {% block commentform %}{% endblock %}
-{% block entry_class %}{{ block.super }} permalink{% endblock %}
-{% block more %}{{ entry.body|safe }}{% endblock %}
+{% block entry_class %}permalink entry full{% endblock %}
 {% block above_entries %}
     <div class="infomessage">
         <a href="/">Home</a> &raquo; <a href="/{{entry.year}}">{{entry.year}}</a> &raquo; <a href="/{{entry.year}}/{{entry.month}}">{{month}}</a>
     </div>
     {% if invalid %}
         <p>
-            <a style="color: red; font-weight: bold;" href="http://validator.w3.org/check?url={% filter urlencode %}http://{{ request.host }}{{ entry.link}}{% endfilter %}" class="external">Invalid XHTML!</a>
+            <a style="color: red; font-weight: bold;" href="http://validator.w3.org/check?url=http://{{ request.host }}{{ entry.link}}" class="external">Invalid XHTML!</a>
         </p>
     {% endif %}
 {% endblock %}
-{%block shorturl%}<div class="shorturl">Permalink <a href="http://{{request.host}}/u/{{entry.key.id}}" title="Permalink to {{entry.title}}">http://{{request.host}}/u/{{entry.key.id}}</a></div>{%endblock%}
+{%block shorturl%}<div class="shorturl">Permalink <a href="http://{{request.host}}/post/{{entry.key().id()}}" title="Permalink to {{entry.title}}">http://{{request.host}}/posts/{{entry.key().id()}}</a></div>{%endblock%}
 {% block disqus_name %}
     <!-- {% if entry.koment %}<div class="comments"><a href="#comments">Leave a comment</a></div>{% else %}<span class="comments">Comments off</span>{% endif %} -->
 {% endblock %}

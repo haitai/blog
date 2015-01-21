@@ -22,11 +22,10 @@ from lib import feedparser
 from lib import demjson
 from lib.plainhtml import convertWebIntelligentPlainTextToHtml
 
-from google.appengine.dist import use_library
-use_library("django", "1.0")
 from django.conf import settings
 settings._target = None
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
+
 from django.template.defaultfilters import slugify
 from django.utils import feedgenerator
 from django.utils import simplejson
@@ -39,14 +38,31 @@ from google.appengine.api import xmpp
 from google.appengine.api import mail
 
 from google.appengine.ext import db
-from google.appengine.ext import webapp
-from google.appengine.ext.db import djangoforms
-from google.appengine.ext.webapp import template
-from google.appengine.ext.webapp.util import run_wsgi_app
+#from google.appengine.ext import webapp
+from wtforms_appengine.db import model_form
+from wtforms import Form, TextField, widgets
+#from google.appengine.ext.webapp import template
+#from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
+import webapp2
+from webapp2_extras import jinja2
+import filters
 
-webapp.template.register_template_library("filters")
-
+def jinja2_factory(app):
+    j = jinja2.Jinja2(app)
+    j.environment.filters.update({
+        'bettertimesince':filters.bettertimesince,
+        'contentshortor':filters.contentshortor,
+        'localelist':filters.localelist,
+        'restrict_to_max':filters.restrict_to_max,
+        'gravatar':filters.gravatar,
+        'date':filters.date,
+        'urlencode ':filters.urlencode_filter,
+    })
+    j.environment.globals.update({
+        'uri_for': webapp2.uri_for,
+    })
+    return j
 def admin(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -231,16 +247,8 @@ blogconfig=BlogConfig.get_by_key_name("default")
 if not blogconfig:
     blogconfig = BlogConfig(key_name = 'default')
 
-class BlogentryForm(djangoforms.ModelForm):
-    class Meta:
-        model = Blogentry
-        exclude = ["author", "published", "updated", "tags","to_url","to_title","entrytype","body_format","body_html"]
-
-class BlogconfigForm(djangoforms.ModelForm):
-    class Meta:
-        model = BlogConfig
-        exclude = [""]
-
+BlogentryForm=model_form(Blogentry)
+BlogconfigForm=model_form(BlogConfig)
 class Archive(db.Model):
     monthyear = db.StringProperty(multiline=False) #September 2008
     year = db.StringProperty(multiline=False) #2008
@@ -299,9 +307,9 @@ class Media(db.Model):
     bits=db.BlobProperty()
     date=db.DateTimeProperty(auto_now_add=True)
 
-class BaseRequestHandler(webapp.RequestHandler):
+class BaseRequestHandler(webapp2.RequestHandler):
     def initialize(self, request, response):
-        webapp.RequestHandler.initialize(self, request, response)
+        webapp2.RequestHandler.initialize(self, request, response)
         if request.path.endswith("/") and not request.path == "/":
             redirect = request.path[:-1]
             if request.query_string:
@@ -670,7 +678,9 @@ class BaseRequestHandler(webapp.RequestHandler):
         self.response.headers["Content-Type"] = "text/javascript"
         self.response.out.write(simplejson.dumps(json, sort_keys=True,
             indent=self.get_integer_argument("pretty", None)))
-
+    @webapp2.cached_property
+    def jinja2(self):
+        return jinja2.get_jinja2(factory=jinja2_factory)
     def render(self, template_file, extra_context={}):
         format = self.request.get("format", None)
         type = self.request.get("type", None)
@@ -708,10 +718,11 @@ class BaseRequestHandler(webapp.RequestHandler):
             extra_context["current_city"] = self.get_current_city()
         extra_context["flickr_feed"] = self.get_flickr_feed()
         extra_context["localit"] = os.environ['SERVER_SOFTWARE']
-        extra_context.update(settings._target.__dict__)
-        template_file = "templates/%s" % template_file
-        path = os.path.join(os.path.dirname(__file__), template_file)
-        self.response.out.write(template.render(path, extra_context))
+        extra_context.update(settings.__dict__)
+        logging.info(settings.__dict__.keys())
+        rv = self.jinja2.render_template(template_file, **extra_context)
+        self.response.write(rv)
+
 
     def ping(self, entry=None):
         feed = blogconfig.BASEURL + "/?format=atom"
@@ -1038,9 +1049,11 @@ class NewBlogentryHandler(BaseRequestHandler):
                 #entry.slug = entry.slug.replace("-"," ")
                 extra_context["entry"] = entry
                 extra_context["tags"] = ",".join(entry.tags)
-                form = BlogentryForm(instance=entry)
+                form = BlogentryForm(obj=entry)
             except db.BadKeyError:
                 return self.redirect("/new")
+        else:
+            extra_context["entry"] = None
         mentions_web = memcache.get('mentions_web')
         if mentions_web is None:
             try:
@@ -1059,105 +1072,107 @@ class NewBlogentryHandler(BaseRequestHandler):
     @admin
     def post(self, key=None):
         extra_context = {}
-        form = BlogentryForm(data=self.request.POST)
-        if form.is_valid():
-            tags = self.get_tags_argument("tags")
-            koment = self.request.get("koment")
-            source = self.request.get("source")
-            entrytype = self.request.get("entrytype")
-            body_format = self.request.get("body_format")
-            body = self.request.get("body")
-            diff = self.request.get("diff")
-            #body_html = to_html(body,body_format)
-            if key:
-                try:
-                    entry = db.get(key)
-                    extra_context["entry"] = entry
-                except db.BadKeyError:
-                    return self.raise_error(404)
-                entry.title = self.request.get("title")
-                slug = str(slugify(self.request.get("slug")))
-                if slug != entry.slug:
-                    if self.get_entry_from_slug(slug=slug):
-                        slug += "-" + uuid.uuid4().hex[:4]
-                entry.slug = slug
-                if diff:
-                    sm= difflib.SequenceMatcher(None, entry.body.encode("utf8"), body.encode("utf8"))
-                    entry.body = (show_diff(sm)).decode("utf8")#body
-                    entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')#body_html
-                else:
-                    entry.body = body
-                    entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
-                if entrytype  != entry.entrytype:
-                    if entrytype == "post":
-                        self.update_tags_and_archives(entry,values=tags,add=True)
-                    else:
-                        self.update_tags_and_archives(entry,values=tags,remove=True)
-                if entrytype == entry.entrytype == "post":
-                    self.update_tags_and_archives(entry,values=tags,edit=True)
-
-                entry.entrytype = entrytype
-                entry.updated = datetime.datetime.now() + datetime.timedelta(hours=blogconfig.UTC_OFFSET)
-
-            else:
-                slug = self.request.get("slug")
-                if slug:
-                    slug = str(slugify(self.request.get("slug")))
-                else:
-                    slug = str(slugify(self.request.get("title")))
-                if not slug:
-                    slug = self.translate('zh-CN','en',self.request.get("title"))
-                    slug = str(slugify(slug))
+        tags = self.get_tags_argument("tags")
+        koment = self.request.get("koment")
+        source = self.request.get("source")
+        entrytype = self.request.get("entrytype")
+        body_format = self.request.get("body_format")
+        body = self.request.get("body")
+        diff = self.request.get("diff")
+        #body_html = to_html(body,body_format)
+        if key:
+            try:
+                entry = db.get(key)
+                extra_context["entry"] = entry
+            except db.BadKeyError:
+                return self.raise_error(404)
+            entry.title = self.request.get("title")
+            slug = str(slugify(self.request.get("slug")))
+            if slug != entry.slug:
                 if self.get_entry_from_slug(slug=slug):
                     slug += "-" + uuid.uuid4().hex[:4]
-                entry = Blogentry(
-                    author=users.get_current_user(),
-                    body=self.request.get("body"),
-                    body_html = to_html(body,body_format),#body_html,
-                    title=self.request.get("title"),
-                    slug=slug,
-                )
-                entry.tags=tags
-                entry.published += datetime.timedelta(hours=blogconfig.UTC_OFFSET)
-                entry.updated = entry.published
-                entry.entrytype = entrytype
-                if entry.entrytype == "post":
-                    self.update_tags_and_archives(entry,add=True)
-                if blogconfig.SYNC_MAIL:
-                    mail.send_mail(
-                        sender = author.email(),
-                        reply_to = blogconfig.EMAIL,
-                        to = blogconfig.SYNC_MAIL,
-                        subject = title,
-                        body = body,
-                    )
-            if koment:
-                entry.koment=True
+            entry.slug = slug
+            if diff:
+                sm= difflib.SequenceMatcher(None, entry.body.encode("utf8"), body.encode("utf8"))
+                entry.body = (show_diff(sm)).decode("utf8")#body
+                entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')#body_html
             else:
-                entry.koment=False
-            scheme, netloc, path, query, fragment = urlparse.urlsplit(source)
-            if scheme and netloc:
-                entry.source = source
-            entry.body_format = body_format
+                entry.body = body
+                entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
+            if entrytype  != entry.entrytype:
+                if entrytype == "post":
+                    self.update_tags_and_archives(entry,values=tags,add=True)
+                else:
+                    self.update_tags_and_archives(entry,values=tags,remove=True)
+            if entrytype == entry.entrytype == "post":
+                self.update_tags_and_archives(entry,values=tags,edit=True)
+
+            entry.entrytype = entrytype
+            entry.updated = datetime.datetime.now() + datetime.timedelta(hours=blogconfig.UTC_OFFSET)
+
+        else:
+            slug = self.request.get("slug")
+            if slug:
+                slug = str(slugify(self.request.get("slug")))
+            else:
+                slug = str(slugify(self.request.get("title")))
+            if not slug:
+                slug = self.translate('zh-CN','en',self.request.get("title"))
+                slug = str(slugify(slug))
+            if self.get_entry_from_slug(slug=slug):
+                slug += "-" + uuid.uuid4().hex[:4]
+            entry = Blogentry(
+                author=users.get_current_user(),
+                body=self.request.get("body"),
+                body_html = to_html(body,body_format),#body_html,
+                title=self.request.get("title"),
+                slug=slug,
+            )
+            entry.tags=tags
+            entry.published += datetime.timedelta(hours=blogconfig.UTC_OFFSET)
+            entry.updated = entry.published
+            entry.entrytype = entrytype
+            if entry.entrytype == "post":
+                self.update_tags_and_archives(entry,add=True)
+            if blogconfig.SYNC_MAIL:
+                mail.send_mail(
+                    sender = author.email(),
+                    reply_to = blogconfig.EMAIL,
+                    to = blogconfig.SYNC_MAIL,
+                    subject = title,
+                    body = body,
+                )
+        if koment:
+            entry.koment=True
+        else:
+            entry.koment=False
+        scheme, netloc, path, query, fragment = urlparse.urlsplit(source)
+        if scheme and netloc:
+            entry.source = source
+        entry.body_format = body_format
+        entry.put()
+        self.kill_entries_cache(slug=entry.slug if key else None,
+            tags=entry.tags, month=entry.published.strftime('%Y/%m'), year=entry.published.strftime('%Y'))
+        if not key:
+            try:
+                self.ping(entry)
+            except:
+                pass
+            try:
+                pshb.publish("http://pubsubhubbub.appspot.com",
+                      blogconfig.BASEURL + "/?format=atom",
+                      )
+                logging.info('Deliver publishing message sucessfully')
+            except:
+                logging.info('Failed to deliver publishing message')
+                pass
+        valid = self.is_valid_xhtml(entry)
+        return self.redirect(self.entry_link(entry,
+            query_args={"invalid": 1} if not valid else {}))
+        form = BlogentryForm(self.request.POST,obj=entry)
+        if self.request.POST and form.validate():
+            form.populate_obj(entry)
             entry.put()
-            self.kill_entries_cache(slug=entry.slug if key else None,
-                tags=entry.tags, month=entry.published.strftime('%Y/%m'), year=entry.published.strftime('%Y'))
-            if not key:
-                try:
-                    self.ping(entry)
-                except:
-                    pass
-                try:
-                    pshb.publish("http://pubsubhubbub.appspot.com",
-                          blogconfig.BASEURL + "/?format=atom",
-                          )
-                    logging.info('Deliver publishing message sucessfully')
-                except:
-                    logging.info('Failed to deliver publishing message')
-                    pass
-            valid = self.is_valid_xhtml(entry)
-            return self.redirect(self.entry_link(entry,
-                query_args={"invalid": 1} if not valid else {}))
         extra_context["form"] = form
         self.render("edit.html" if key else "new.html", extra_context)
 
@@ -1430,7 +1445,7 @@ class NotFoundHandler(BaseRequestHandler):
 class EntryIdRedirectHandler(BaseRequestHandler):
     def get(self,id):
         entry = self.get_entry_from_id(id=id)
-        self.redirect(self.entry_link(entry,absolute=True),permanent=True)
+        self.redirect(str(self.entry_link(entry,absolute=True)),permanent=True)
 
 class TagPageHandler(BaseRequestHandler):
     def get(self, tag):
@@ -1551,7 +1566,7 @@ class RobotsHandler(BaseRequestHandler):
         self.response.headers['Content-type'] = 'text/plain; charset=UTF-8'
         self.render("robots.txt", extra_context)
 
-application = webapp.WSGIApplication([
+application = webapp2.WSGIApplication([
     ("/", MainPageHandler),
     ('/media/(.*)',MediaHandler),
     ("/index/?", ArchivePageHandler),
@@ -1589,10 +1604,3 @@ application = webapp.WSGIApplication([
     ('/_ah/xmpp/message/chat/', XMPPHandler),
     ("/.*", NotFoundHandler),
 ], debug=True)
-
-def main():
-    logging.getLogger().setLevel(logging.DEBUG)
-    run_wsgi_app(application)
-
-if __name__ == "__main__":
-    main()
