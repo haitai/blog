@@ -2,7 +2,7 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
     <ShortName>{{ config.TITLE }}</ShortName>
     <Description>Search {{ config.TITLE }}.</Description>
-    <Url type="text/html" template="http://www.google.com/search?domains={{ request.host }}&amp;sitesearch={{ request.host }}&amp;q={searchTerms}"/>
+    <Url type="text/html" template="https://www.google.com/search?domains={{ request.host }}&amp;sitesearch={{ request.host }}&amp;q={searchTerms}"/>
     <Image type="image/png">http://{{ request.host }}/static/images/favicon.png</Image>
     <Query role="example" searchTerms="blog"/>
     <SyndicationRight>open</SyndicationRight>

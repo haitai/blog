@@ -20,7 +20,7 @@ $(document).ready(function() {
             return
         }
         var comment = $(this).parents('.entry');
-        $.postJSON('/deletecomment', {key: comment.attr('id')}, function(data) {
+        $.postJSON('/deleteitem', {key: comment.attr('id')}, function(data) {
             if (data.success) {
                 comment.slideUp();
             }

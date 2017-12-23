@@ -16,25 +16,18 @@ from email.header import decode_header
 #from email.utils import parseaddr
 import difflib
 
-from lib import pubsubhubbub_publish as pshb
 from lib import BeautifulSoup,markdown2,textile
 from lib import feedparser
-from lib import demjson
 from lib.plainhtml import convertWebIntelligentPlainTextToHtml
 
-from django.conf import settings
-settings._target = None
-os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 
 from django.template.defaultfilters import slugify
 from django.utils import feedgenerator
 from django.utils import simplejson
-from django.utils.dates import MONTHS#, MONTHS_3, MONTHS_AP, WEEKDAYS, WEEKDAYS_ABBR
 
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from google.appengine.api import users
-from google.appengine.api import xmpp
 from google.appengine.api import mail
 
 from google.appengine.ext import db
@@ -48,6 +41,11 @@ import webapp2
 from webapp2_extras import jinja2
 import filters
 
+LINKS = [
+    {"url": "https://www.huhaitai.com", "value": "www"},
+    {"url":"https://t.huhaitai.com","value":"micro blog"},
+]
+
 def jinja2_factory(app):
     j = jinja2.Jinja2(app)
     j.environment.filters.update({
@@ -58,6 +56,8 @@ def jinja2_factory(app):
         'gravatar':filters.gravatar,
         'date':filters.date,
         'urlencode ':filters.urlencode_filter,
+        'bettermonth':filters.bettermonth,
+        'hidenickname':filters.hidenickname,
     })
     j.environment.globals.update({
         'uri_for': webapp2.uri_for,
@@ -81,7 +81,7 @@ def to_html(body,body_format):
     if body_format == 'markdown':
         body_html = markdown2.markdown(body)
     elif body_format == 'textile':
-        body_html = textile.textile(body)
+        body_html = textile.textile(body).decode('utf-8')
     elif body_format == 'txt':
         body_html = convertWebIntelligentPlainTextToHtml(body).decode('utf-8')
     else:
@@ -232,13 +232,8 @@ class BlogConfig(db.Model):
     UTC_OFFSET = db.IntegerProperty(default=+8)
     RPC_USERNAME = db.StringProperty()
     PRC_PASSWORD = db.StringProperty()
-    DOUBAN = db.StringProperty(default="haitai")
-    FLICKR_ID = db.StringProperty()
     WEBMASTER_VERIFICATION_CONTENT =  db.StringProperty()
-    DOPPLR_TOKEN =  db.StringProperty()
-    MAPS_API_KEY =  db.StringProperty()
     ANALYTICS =  db.StringProperty()
-    SHOW_CURRENT_CITY = db.BooleanProperty(default=False)
     SHOW_ENTRYCOUNT = db.BooleanProperty(default=False)
     INDEXED_ALLOWED = db.BooleanProperty(default=True)
 
@@ -247,7 +242,7 @@ blogconfig=BlogConfig.get_by_key_name("default")
 if not blogconfig:
     blogconfig = BlogConfig(key_name = 'default')
 
-BlogentryForm=model_form(Blogentry)
+BlogentryForm=model_form(Blogentry,exclude=('to_url', 'to_title','body_format','entrytype'))
 BlogconfigForm=model_form(BlogConfig)
 class Archive(db.Model):
     monthyear = db.StringProperty(multiline=False) #September 2008
@@ -322,21 +317,6 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def raise_error(self, code):
         self.error(code)
         self.render("%i.html" % code)
-
-    def get_current_city(self):
-        key = "current_city/now"
-        current_city = memcache.get(key)
-        if not current_city:
-            try:
-                response = urlfetch.fetch("https://www.dopplr.com/api/traveller_info?format=js&token=" + blogconfig.DOPPLR_TOKEN)
-                if response.status_code == 200:
-                    data = simplejson.loads(response.content)
-                    current_city = data["traveller"]["current_city"]
-                    current_city["maps_api_key"] = blogconfig.MAPS_API_KEY
-                    memcache.set(key, current_city, 60*60*5)
-            except:
-                pass
-        return current_city
 
     def get_last_updated(self):
         key = "time/last_updated"
@@ -573,13 +553,6 @@ class BaseRequestHandler(webapp2.RequestHandler):
             })
         return thumbnails
 
-    def generate_sup_id(self, url=None):
-        return hashlib.md5(url or self.request.url).hexdigest()[:10]
-
-    def set_sup_id_header(self):
-        sup_id = self.generate_sup_id()
-        self.response.headers["X-SUP-ID"] = \
-            "http://friendfeed.com/api/public-sup.json#%s" % sup_id
 
     def getrelatedcomments(self):
         self.to_url=self.request.path
@@ -618,7 +591,6 @@ class BaseRequestHandler(webapp2.RequestHandler):
             )
         data = f.writeString("utf-8")
         self.response.headers["Content-Type"] = "application/atom+xml"
-        self.set_sup_id_header()
         self.response.out.write(data)
 
     def render_comments_feed(self, comments):
@@ -714,46 +686,10 @@ class BaseRequestHandler(webapp2.RequestHandler):
         extra_context["pages"] = self.get_items(entrytype='page')
         extra_context["all_months"] = self.get_entries_months()
         extra_context["last_updated"] = self.get_last_updated()
-        if blogconfig.SHOW_CURRENT_CITY:
-            extra_context["current_city"] = self.get_current_city()
-        extra_context["flickr_feed"] = self.get_flickr_feed()
         extra_context["localit"] = os.environ['SERVER_SOFTWARE']
-        extra_context.update(settings.__dict__)
-        logging.info(settings.__dict__.keys())
+        extra_context["LINKS"] = LINKS
         rv = self.jinja2.render_template(template_file, **extra_context)
         self.response.write(rv)
-
-
-    def ping(self, entry=None):
-        feed = blogconfig.BASEURL + "/?format=atom"
-        args = urllib.urlencode({
-            "name": blogconfig.TITLE,
-            "url": blogconfig.BASEURL + "/",
-            "changesURL": feed,
-        })
-        response = urlfetch.fetch("http://blogsearch.google.com/ping?" + args)
-        args = urllib.urlencode({
-            "url": feed,
-            "supid": self.generate_sup_id(feed),
-        })
-        response = urlfetch.fetch("http://friendfeed.com/api/public-sup-ping?" \
-            + args)
-        args = urllib.urlencode({
-            "bloglink": blogconfig.BASEURL + "/",
-        })
-        response = urlfetch.fetch("http://www.feedburner.com/fb/a/pingSubmit?" \
-            + args)
-
-    def is_valid_xhtml(self, entry):
-        args = urllib.urlencode({
-            "uri": self.entry_link(entry, absolute=True),
-        })
-        try:
-            response = urlfetch.fetch("http://validator.w3.org/check?" + args,
-                method=urlfetch.HEAD)
-        except urlfetch.DownloadError:
-            return True
-        return response.headers["X-W3C-Validator-Status"] == "Valid"
 
     def entry_link(self, entry, query_args={}, absolute=False):
         url =  entry.link
@@ -763,36 +699,8 @@ class BaseRequestHandler(webapp2.RequestHandler):
             url += "?" + urllib.urlencode(query_args)
         return url
 
-    def get_flickr_feed(self):
-        if not blogconfig.FLICKR_ID:
-            return {}
-        key = "flickr_feed"
-        flickr_feed = memcache.get(key)
-        if not flickr_feed:
-            flickr_feed = {}
-            args = urllib.urlencode({
-                "id": blogconfig.FLICKR_ID,
-                "format": "json",
-                "nojsoncallback": 1,
-            })
-            try:
-                response = urlfetch.fetch(
-                    "http://api.flickr.com/services/feeds/photos_public.gne?" \
-                        + args)
-                if response.status_code == 200:
-                    try:
-                        flickr_feed = demjson.decode(response.content)
-                        memcache.set(key, flickr_feed, 60*5)
-                    except ValueError:
-                        flickr_feed = {}
-            except urlfetch.DownloadError:
-                pass
-        # Slice here to avoid doing it in the template
-        flickr_feed["items"] = flickr_feed.get("items", [])[:5]
-        return flickr_feed
-
     def translate(self,sl, tl, phrase):
-        base_uri = "http://ajax.googleapis.com/ajax/services/language/translate"
+        base_uri = "https://ajax.googleapis.com/ajax/services/language/translate"
         default_params = {'v': '1.0'}
 
         args = default_params.copy()
@@ -959,10 +867,6 @@ class FeedRedirectHandler(BaseRequestHandler):
         self.redirect(feed_url, permanent=True)
 
 class MainPageHandler(BaseRequestHandler):
-    def head(self):
-        if self.request.get("format", None) == "atom":
-            self.set_sup_id_header()
-
     def get(self):
         offset = self.get_integer_argument("start", 0)
         order = self.get_integer_argument("order", 0)
@@ -1054,16 +958,6 @@ class NewBlogentryHandler(BaseRequestHandler):
                 return self.redirect("/new")
         else:
             extra_context["entry"] = None
-        mentions_web = memcache.get('mentions_web')
-        if mentions_web is None:
-            try:
-                mentions_web = feedparser.parse('http://blogsearch.google.com/blogsearch_feeds?hl=en&q=' + urllib.quote('link:' + blogconfig.BASEURL) + '&ie=utf-8&num=10&output=atom')
-                memcache.add('mentions_web', mentions_web, 3600)
-            except:
-                mentions_web = None
-        if mentions_web is not None:
-            extra_context['mentions_web'] = mentions_web.entries
-
         extra_context["form"] = form
         extra_context["on_new"] = True
 
@@ -1093,8 +987,8 @@ class NewBlogentryHandler(BaseRequestHandler):
                     slug += "-" + uuid.uuid4().hex[:4]
             entry.slug = slug
             if diff:
-                sm= difflib.SequenceMatcher(None, entry.body.encode("utf8"), body.encode("utf8"))
-                entry.body = (show_diff(sm)).decode("utf8")#body
+                sm= difflib.SequenceMatcher(None, entry.body, body)
+                entry.body = (show_diff(sm))#body
                 entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')#body_html
             else:
                 entry.body = body
@@ -1153,22 +1047,7 @@ class NewBlogentryHandler(BaseRequestHandler):
         entry.put()
         self.kill_entries_cache(slug=entry.slug if key else None,
             tags=entry.tags, month=entry.published.strftime('%Y/%m'), year=entry.published.strftime('%Y'))
-        if not key:
-            try:
-                self.ping(entry)
-            except:
-                pass
-            try:
-                pshb.publish("http://pubsubhubbub.appspot.com",
-                      blogconfig.BASEURL + "/?format=atom",
-                      )
-                logging.info('Deliver publishing message sucessfully')
-            except:
-                logging.info('Failed to deliver publishing message')
-                pass
-        valid = self.is_valid_xhtml(entry)
-        return self.redirect(self.entry_link(entry,
-            query_args={"invalid": 1} if not valid else {}))
+        return self.redirect(self.entry_link(entry))
         form = BlogentryForm(self.request.POST,obj=entry)
         if self.request.POST and form.validate():
             form.populate_obj(entry)
@@ -1219,16 +1098,42 @@ class BlogconfigHandler(BaseRequestHandler):
     @admin
     def get(self):
         extra_context = {}
-        form = BlogconfigForm(instance=blogconfig)
+        form = BlogconfigForm(obj=blogconfig)
         extra_context["form"] = form
         self.render("settings.html", extra_context)
 
     @admin
     def post(self):
         extra_context = {}
-        form = BlogconfigForm(instance=blogconfig,data=self.request.POST)
-        if form.is_valid():
+        form = BlogconfigForm(self.request.POST,obj=blogconfig)
+        if form.validate():
             form.save()
+        blogconfig.TITLE = self.request.get("TITLE")
+        blogconfig.NAME = self.request.get("NAME")
+        blogconfig.EMAIL = self.request.get("EMAIL")
+        if self.request.get("SYNC_MAIL"):
+            blogconfig.SYNC_MAIL = self.request.get("SYNC_MAIL")
+        blogconfig.BASEURL = self.request.get("BASEURL")
+        blogconfig.FEED_SMITH = self.request.get("FEED_SMITH")
+        blogconfig.NUM_MAIN = int(self.request.get("NUM_MAIN"))
+        blogconfig.NUM_RECENT = int(self.request.get("NUM_RECENT"))
+        blogconfig.NUM_COMMENTS = int(self.request.get("NUM_COMMENTS"))
+        blogconfig.NUM_STATUSES = int(self.request.get("NUM_STATUSES"))
+        blogconfig.UTC_OFFSET = int(self.request.get("UTC_OFFSET"))
+        blogconfig.RPC_USERNAME = self.request.get("RPC_USERNAME")
+        blogconfig.PRC_PASSWORD = self.request.get("PRC_PASSWORD")
+        blogconfig.WEBMASTER_VERIFICATION_CONTENT = self.request.get("WEBMASTER_VERIFICATION_CONTENT")
+        blogconfig.ANALYTICS = self.request.get("ANALYTICS")
+        if self.request.get("SHOW_ENTRYCOUNT"):
+            blogconfig.SHOW_ENTRYCOUNT = True
+        else:
+            blogconfig.SHOW_ENTRYCOUNT = False
+        if self.request.get("INDEXED_ALLOWED"):
+            blogconfig.INDEXED_ALLOWED = True
+        else:
+            blogconfig.INDEXED_ALLOWED = False
+
+        blogconfig.put()
         extra_context["form"] = form
         extra_context["saved"] = True
         self.render("settings.html", extra_context)
@@ -1283,37 +1188,6 @@ class MailReceiver(BaseRequestHandler,InboundMailHandler):
             entry.put()
             self.update_tags_and_archives(entry,add=True)
             self.kill_entries_cache(tags=entry.tags, month=entry.published.strftime('%Y/%m'), year=entry.published.strftime('%Y'))
-            try:
-                self.ping(entry)
-            except:
-                pass
-            try:
-                pshb.publish("http://pubsubhubbub.appspot.com",
-                      blogconfig.BASEURL + "/?format=atom",
-                      )
-                logging.info('Deliver publishing message sucessfully')
-            except:
-                logging.info('Failed to deliver publishing message')
-                pass
-
-class XMPPHandler(BaseRequestHandler):
-    def post(self):
-        message = xmpp.Message(self.request.POST)
-        if message.sender.split('/')[0] == blogconfig.EMAIL:
-            content=message.body
-            try:
-                s = Blogentry(
-                                author=users.User(email = blogconfig.EMAIL),
-                                body=content,
-                                entrytype='status',
-                                )
-                s.published += datetime.timedelta(hours=blogconfig.UTC_OFFSET)
-                s.updated = s.published
-                s.put()
-                memcache.delete("status/archive")
-                self.kill_entries_cache()
-            except:
-                message.reply(u"发布失败，请重试!")
 
 class ImportWordPressHandler(BaseRequestHandler):
     def get_tags_argument(self, tags):
@@ -1325,7 +1199,7 @@ class ImportWordPressHandler(BaseRequestHandler):
 
         source=self.request.get("wpfile")
         doc=et.fromstring(source)
-        wpns='{http://wordpress.org/export/1.0/}'
+        wpns='{http://wordpress.org/export/1.2/}'
         contentns="{http://purl.org/rss/1.0/modules/content/}"
         et._namespace_map[wpns]='wp'
         et._namespace_map[contentns]='content'
@@ -1409,18 +1283,6 @@ class ImportWordPressHandler(BaseRequestHandler):
 
             blogentry.put()
             self.kill_entries_cache(tags=blogentry.tags, month=blogentry.published.strftime('%Y/%m'), year=blogentry.published.strftime('%Y'))
-            try:
-                self.ping(blogentry)
-            except:
-                pass
-            try:
-                pshb.publish("http://pubsubhubbub.appspot.com",
-                  blogconfig.BASEURL + "/?format=atom",
-                  )
-                logging.info('Deliver publishing message sucessfully')
-            except:
-                logging.info('Failed to deliver publishing message')
-                pass
         self.redirect("/import_wp")
 
 class ExportWordPressHandler(BaseRequestHandler):
@@ -1460,7 +1322,7 @@ class MonthPageHandler(BaseRequestHandler):
     def get(self, year, month):
         extra_context = {
             "entries": self.get_monthly_entries(month,year),
-            "month": MONTHS[int(month)],
+            "month": month,
             "year": year,
             "comment_title":"%s-%s" %(year,month),
         }
@@ -1601,6 +1463,5 @@ application = webapp2.WSGIApplication([
     ("/sitemap.xml", AtomSitemapHandler),
     ("/robots.txt", RobotsHandler),
     ('/_ah/mail/.+', MailReceiver),
-    ('/_ah/xmpp/message/chat/', XMPPHandler),
     ("/.*", NotFoundHandler),
 ], debug=True)

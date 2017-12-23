@@ -10,38 +10,22 @@
     <a href="/">Home</a> &raquo; Search
     </div>
     <!-- Google Custom Search Element -->
-    <div id="cse-search-form" style="width: 100%;">Loading</div>
-
-    <div id="cse">Loading...</div>
-</div>
-<script src="http://www.google.com/jsapi" type="text/javascript"></script>
-<script type="text/javascript">
-  google.load('search', '1');
-  google.setOnLoadCallback(function() {
-    var customSearchControl = new google.search.CustomSearchControl('014994773469974581074:ifhfbgk6opc');
-    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
-    customSearchControl.setLinkTarget(google.search.Search.LINK_TARGET_SELF);
-    customSearchControl.setNoResultsString('Nothing found, please try another keyword.');
-    customSearchControl.setSearchCompleteCallback(null, function() {
-        $('input.gsc-input').select();
-        $('a.gs-title').each(function() {
-            var title = $(this).html().replace(/\-.*/g, '');
-            $(this).html(title);
-        });
-        $('b:contains("...")').contents().unwrap();
-    });
-
-    var options = new google.search.DrawOptions();
-    options.setSearchFormRoot('cse-search-form');
-
-    options.setAutoComplete(true);
-    customSearchControl.draw('cse', options);
-    var match = location.search.match(/q=([^&]*)(&|$)/);
-    if(match && match[1]){
-        var search = decodeURIComponent(match[1]);
-        customSearchControl.execute(search);
-    }
-
-  }, true);
+    <div id="cse-search-form" style="width: 100%;">
+        <script>
+  (function() {
+    var cx = '014994773469974581074:ifhfbgk6opc';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
 </script>
+<gcse:searchbox></gcse:searchbox>
+    </div>
+
+    <div id="cse">
+    <gcse:searchresults></gcse:searchresults></div>
+</div>
 {% endblock %}

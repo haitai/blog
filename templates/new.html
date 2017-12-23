@@ -10,7 +10,7 @@
 
 {% block body %}
 <div class="infomessage" id="hideside">
-    <a href="/">Home</a> &raquo; <span title="You can click here to hide/show the header and the sidebar">Write</span>
+    <a href="/">Home</a> &raquo; <span title="You can post status on the right sidebar">Write</span>
 </div>
 
 <script type="text/javascript" >
@@ -19,13 +19,12 @@
    });
 </script>
     <form id="new" method="post">
-        <table>
-                    {% for w in form %}
+        {% for w in form %}
         <div class="seinpt"><p>{{w.name|lower}}</p>
         {{w}}</div><div style="clear:both"></div>
         {%endfor%}
-            <tr><th><label for="id_entrytype">Entrytype:</label></th><td>
-            <select id="id_entrytype" name="entrytype">
+            <div class="seinpt"><p>entrytype</p>
+            <select id="entrytype" name="entrytype">
             {%if entry.entrytype== "post"%}
             <option selected="selected" value="post">post</option>
             {%else%}
@@ -37,8 +36,9 @@
             <option value="page">page</option>
             {%endif%}
             </select>
-            Format:
-            <select id="id_body_format" name="body_format">
+            </div><div style="clear:both"></div>
+            <div class="seinpt"><p>format</p>
+            <select id="body_format" name="body_format">
             {%if entry.body_format== "html"%}
             <option selected="selected" value="html">HTML</option>
             {%else%}
@@ -60,24 +60,14 @@
             <option value="txt">Plain Text</option>
             {%endif%}
             </select>
-            </td></tr>
-            <tr>
-                <th>Tags:</th>
-                <td>
-                    <input type="text" name="tags" value="{{ tags }}" title="Tags (comma-separated)"/>
-                    (Comma separated)
-                </td>
-            </tr>
-            <tr>
-                <th></th>
-                <td>
-                    <div style="margin-top: 1em;">
-                        <input type="submit" value="{% block submit_value %}Post{% endblock %}"/>
-                        <a style="margin-left: .5em;" href="{% block cancel_link %}/{% endblock %}">Cancel</a>
-                    </div>
-                </td>
-            </tr>
-        </table>
+            </div><div style="clear:both"></div>
+            <div class="seinpt"><p>tags</p>
+            <input type="text" name="tags" value="{{ tags }}" title="Tags (comma-separated)"/>
+            (Comma separated)</div><div style="clear:both"></div>
+            <div style="margin-top: 1em;">
+                <input type="submit" value="{% block submit_value %}Post{% endblock %}"/>
+                <a style="margin-left: .5em;" href="{% block cancel_link %}/{% endblock %}">Cancel</a>
+            </div>
     </form>
 {% endblock %}
 {% block disqus %}{% endblock %}

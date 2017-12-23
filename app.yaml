@@ -15,7 +15,6 @@ default_expiration: "3650d"
 
 inbound_services:
 - mail
-- xmpp_message
 
 handlers:
 - url: /static
@@ -47,5 +46,3 @@ libraries:
   version: "latest"
 - name: django
   version: "1.2"
-env_variables:
-  DJANGO_SETTINGS_MODULE: 'settings'

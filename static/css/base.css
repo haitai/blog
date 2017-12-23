@@ -25,7 +25,7 @@ padding-top:15px
 ::-moz-selection{background:#000;color:#f8f8f8;}
 ::selection{background:#000;color:#f8f8f8;}
 
-a.new,a.new:visited,a.edit,span.edit,a.delete,.entry .post_date,.entry .tags,.entry .comments,#sidebar ul.archives li,#sidebar ul.links li,#sidebar ul.recent li,ul#tagcloud li,.shorturl,.feed a {
+a.new,a.new:visited,a.edit,span.edit,a.delete,a.deletecomment,.entry .post_date,.entry .tags,.entry .comments,#sidebar ul.archives li,#sidebar ul.links li,#sidebar ul.recent li,ul#tagcloud li,.shorturl,.feed a {
 background:url(/static/images/icons.png) no-repeat;
 padding-left:20px;
 height:16px;
@@ -68,7 +68,7 @@ a.edit,span.edit {
 background-position:-8px -232px
 }
 
-a.delete {
+a.delete ,a.deletecomment{
 background-position:-8px -200px
 }
 
@@ -178,7 +178,7 @@ text-decoration: underline
 }
 .feed {margin-left:10px;float: left;padding-top: 20px}
 .feed a {
-background-position:-8px -102px;
+background-position:-8px -104px;
 height:20px
 }
 #menuDiv:hover{background: #fff}
@@ -264,7 +264,7 @@ font-size:8pt
 padding:25px
 }
 
-.entry.full a.delete,.entry.full a.delete:visited,.entry.full a.edit,.entry.full a.edit:visited {
+.entry.full a.delete,.entry.full a.delete:visited,.entry.full a.edit,.entry.full a.edit:visited,.entry.full a.deletecomment {
 text-decoration:underline;
 font-size:10pt;
 color:red;
@@ -533,6 +533,7 @@ p,.infomessage {
 margin-bottom:1em
 }
 .infomessage{font-size:1.3em;text-transform:lowercase}
+.error404{font-size: 8em}
 a:hover,#logo a:hover,#sidebar .box:hover h3 a {
 text-decoration:underline
 }

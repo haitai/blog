@@ -2,10 +2,9 @@ import datetime
 import hashlib,urllib#,md5
 
 #from django.template.defaultfilters import timesince
-from django.conf import settings
 import urllib
 from markupsafe import Markup
-UTC_OFFSET = getattr(settings, "UTC_OFFSET", 0)
+UTC_OFFSET = +8
 def bettertimesince(dt):
     #delta = datetime.datetime.utcnow() - dt
     delta = datetime.datetime.utcnow() - dt + datetime.timedelta(hours=UTC_OFFSET)
@@ -63,7 +62,7 @@ def restrict_to_max(value,max):
         return max
 
 def gravatar(email,size):
-    imgurl = "http://www.gravatar.com/avatar/"
+    imgurl = "https://www.gravatar.com/avatar/"
     imgurl +=hashlib.md5(email).hexdigest()+"?"+ urllib.urlencode({'s':str(size),'r':'G'})
     return imgurl
     
@@ -75,3 +74,35 @@ def urlencode_filter(s):
     s = s.encode('utf8')
     s = urllib.quote_plus(s)
     return Markup(s)
+
+def bettermonth(value):
+    v=str(value)
+    if v == "01":
+        return "January"
+    if v == "02":
+        return "February"
+    if v == "03":
+        return "March"
+    if v == "04":
+        return "April"
+    if v == "05":
+        return "May"
+    if v == "06":
+        return "June"
+    if v == "07":
+        return "July"
+    if v == "08":
+        return "August"
+    if v == "09":
+        return "September"
+    if v == "10":
+        return "October"
+    if v == "11":
+        return "November"
+    if v == "12":
+        return "December"
+
+def hidenickname(nickname):
+    n=str(nickname)
+    nn=n[:-2]+"**"
+    return nn

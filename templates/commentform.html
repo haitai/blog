@@ -25,14 +25,14 @@
                 <li class="pagecomment">
                 <a name="{{comment.key().id()}}"></a>
                 <div class="gravatar"><img height="48" width="48" class="avatar" src="{{comment.author.email()|gravatar(48)}}" alt=""/></div>
-                <div class="commentbody"><a href="{{comment.link}}">{{ comment.author.nickname() }}</a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
+                <div class="commentbody"><a href="{{comment.link}}">{{ comment.author.nickname()|hidenickname }}</a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
 {%if logined%}<a href="#" title="Reply this comment" class="reply" cid="{{comment.key().id()}}"> <img src="/static/images/reply.png" alt="Reply this comment"/> </a>{%endif%}<br />
-                <p>{%if comment.author.nickname =="haitai"%}<b>{{comment.body|striptags|contentshortor(50)}}</b>{%else%}{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}{%endif%}</p>
+                <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
                 {%if comment.replycomments%}<div class="replycomments">{%for comment in comment.replycomments%}<a name="{{comment.key().id()}}"></a>
 <div class="gravatar"><img height="36" width="36" class="avatar" src="{{comment.author.email()|gravatar(36)}}" alt=""/></div>
-<div class="commentbody"><a href="{{comment.link}}">{{ comment.author.nickname() }}</a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
+<div class="commentbody"><a href="{{comment.link}}">{{ comment.author.nickname()|hidenickname }}</a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
 <br />
-<p>{%if comment.author.nickname== "haitai"%}<b>{{comment.body|striptags|contentshortor(50)}}</b>{%else%}{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}{%endif%}</p>
+<p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
 
                 {%endfor%}</div>{%endif%}
                 </div>
@@ -47,8 +47,8 @@
                 <li class="comment">
                 <a name="{{comment.key().id()}}"></a>
                 <div class="gravatar"><img height="32" width="32" class="avatar" src="{{comment.author.email()|gravatar(32)}}" alt=""/></div>
-                    <div><a href="{{comment.link}}">{{ comment.author.nickname() }}</a></div>
-                    <div class="body" title="{{ comment.published }}">{%if comment.author.nickname =="haitai"%}<b>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</b>{%else%}{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}{%endif%}
+                    <div><a href="{{comment.link}}">{{ comment.author.nickname()|hidenickname }}</a></div>
+                    <div class="body" title="{{ comment.published }}">{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
                     </div>
                 </li>
             {% endfor %}{%else%}

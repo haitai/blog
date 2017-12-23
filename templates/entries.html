@@ -44,6 +44,7 @@
                 {% endif %}
                     {% if admin %}
                         <a class="hidden edit" href="/edit/{{ entry.key() }}">edit</a>
+                        <a class="hidden edit" href="/edit/{{ entry.key() }}?diff=1">diff edit</a>
                         <a class="hidden deletecomment" href="#">delete</a>
                     {% endif %}
                 </h2>
@@ -61,7 +62,7 @@
             <a name="{{entry.key.id}}"></a>
                 <div class="commentgravatar"><img height="50" width="50" class="avatar avatar-50" src="{{entry.author.email()|gravatar(50)}}" alt=""/></div>
                 <h2>
-                    <a href="{{entry.link}}" class="comment_title">{{ entry.author.nickname() }}</a> {%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
+                    <a href="{{entry.link}}" class="comment_title">{{ entry.author.nickname()|hidenickname }}</a> {%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
                 </h2>
                     <div class="post_date comment_date"> said {%if entry.to_title%}on "<a href="{{ entry.to_url }}" class="">{{entry.to_title}}</a>"{%endif%} <span title="{{ entry.published }}">{{entry.published|bettertimesince}}</span></div>
                 <div class="comment_body">
