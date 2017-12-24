@@ -27,6 +27,15 @@ $(document).ready(function() {
         });
     });
 
+    $('.reply').click(function(l) {
+        cid = $(this).attr("cid")
+        to_url = "/comment/" + cid
+        to_title = "comment #" + cid
+        $("input[name='to_url']").val(to_url);
+        $("input[name='to_title']").val(to_title);
+        $("textarea")[0].focus();
+
+    });
     var b=jQuery("#yui-main > .yui-b"),
     d=jQuery("#sidebar");
     if(b.length){

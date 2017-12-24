@@ -9,7 +9,7 @@
                 <span class="entry_title">{{ entry.title }}</span>
                 {% else %}<h2><a href="{{ entry.link }}" class="entry_title">{{ entry.title }}</a>{% endif %}{% if entry.source %}<a href="{{entry.source}}" class="external"></a>{% endif %}
                 {% if admin %}
-                    <a class="hidden edit" href="/edit/{{ entry.key() }}">clean edit</a>
+                    <a class="hidden edit" href="/edit/{{ entry.key() }}">normal edit</a>
                     <a class="hidden edit" href="/edit/{{ entry.key() }}?diff=1">diff edit</a>
                     <a class="hidden delete" href="#">delete</a>
                 {% endif %}
@@ -43,7 +43,7 @@
                 <a href="{{entry.source}}" class="external"></a>
                 {% endif %}
                     {% if admin %}
-                        <a class="hidden edit" href="/edit/{{ entry.key() }}">edit</a>
+                        <a class="hidden edit" href="/edit/{{ entry.key() }}">normal edit</a>
                         <a class="hidden edit" href="/edit/{{ entry.key() }}?diff=1">diff edit</a>
                         <a class="hidden deletecomment" href="#">delete</a>
                     {% endif %}

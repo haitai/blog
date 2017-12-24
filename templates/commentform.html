@@ -51,11 +51,12 @@
                     <div class="body" title="{{ comment.published }}">{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
                     </div>
                 </li>
-            {% endfor %}{%else%}
+            {% endfor %}
+            {%else%}
             <li class="comment">No comments here</li>
             {%endif%}
             {%endif%}
             </ul>
-            {%if not on_entry and not on_comment and not on_status and not on_page%}<p class="morecomments">{%if not show_comments%}<a href="?show_comments=true">Read more comments...</a>{%else%}<a href="/comments">Read all comments...</a>{%endif%}</p>{%endif%}
+            {%if not on_entry and not on_comment and not on_status and not on_page%}<p class="morecomments">{% if relatedcomments %}{%if not show_comments%}<a href="?show_comments=true">Read more comments...</a>{%else%}<a href="/comments">Read all comments...</a>{%endif%}{%else%}<a href="/comments">Read all comments...</a>{%endif%}</p>{%endif%}
             {%endif%}
         </div>
