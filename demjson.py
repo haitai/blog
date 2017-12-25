@@ -7,11 +7,6 @@ r""" A JSON data encoder and decoder.
  encoding format; a subset of ECMAScript (aka JavaScript) for encoding
  primitive data types (numbers, strings, booleans, lists, and
  associative arrays) in a language-neutral simple text-based syntax.
- 
- It can encode or decode between JSON formatted strings and native
- Python data types.  Normally you would use the encode() and decode()
- functions defined by this module, but if you want more control over
- the processing you can use the JSON class.
 
  This implementation tries to be as completely cormforming to all
  intricacies of the standards as possible.  It can operate in strict

@@ -13,9 +13,7 @@ ill-formed data structure. If your document is only locally
 well-formed, you can use this library to find and process the
 well-formed part of it.
 
-Beautiful Soup works with Python 2.2 and up. It has no external
-dependencies, but you'll have more success at converting data to UTF-8
-if you also install these three packages:
+Beautiful Soup works with Python 2.2 and up. \
 
 * chardet, for auto-detecting character encodings
   http://chardet.feedparser.org/

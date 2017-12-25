@@ -242,7 +242,7 @@ blogconfig=BlogConfig.get_by_key_name("default")
 if not blogconfig:
     blogconfig = BlogConfig(key_name = 'default')
 
-BlogentryForm=model_form(Blogentry,exclude=('to_url', 'to_title','body_format','entrytype'))
+BlogentryForm=model_form(Blogentry,exclude=('to_url', 'to_title','body_format','entrytype','body_html'))
 BlogconfigForm=model_form(BlogConfig)
 class Archive(db.Model):
     monthyear = db.StringProperty(multiline=False) #September 2008
@@ -688,6 +688,8 @@ class BaseRequestHandler(webapp2.RequestHandler):
         extra_context["last_updated"] = self.get_last_updated()
         extra_context["localit"] = os.environ['SERVER_SOFTWARE']
         extra_context["LINKS"] = LINKS
+        extra_context["diff"] = self.request.get("diff")               
+
         rv = self.jinja2.render_template(template_file, **extra_context)
         self.response.write(rv)
 
@@ -700,21 +702,22 @@ class BaseRequestHandler(webapp2.RequestHandler):
         return url
 
     def translate(self,sl, tl, phrase):
-        base_uri = "https://ajax.googleapis.com/ajax/services/language/translate"
-        default_params = {'v': '1.0'}
+        base_uri = "https://translate.googleapis.com/translate_a/single"
+        #another translate api "https://translate.google.so/translate_a/t?client=any_client_id_works&sl=auto&tl=ru&q=wrapper&tbb=1&ie=UTF-8&oe=UTF-8"
+        default_params = {'client': 'gtx','dt':'t'}
 
         args = default_params.copy()
         args.update({
-            'langpair': '%s%%7C%s' % (sl, tl),
-            'q': urllib.quote_plus(
-                     phrase.encode('utf-8')),
+            'sl':sl,
+            'tl':tl,
+            'q': urllib.quote_plus(phrase.encode('utf-8')),
         })
-        argstring = '%s' % ('&'.join(['%s=%s' % (k,v)
-        for (k,v)in args.iteritems()]))
+        argstring = '%s' % ('&'.join(['%s=%s' % (k,v) for (k,v)in args.iteritems()]))
         url = base_uri + '?'+ argstring
+        # url = https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh_CN&tl=en&dt=t&q=测试
         try:
             resp = simplejson.loads(urlfetch.fetch(url).content)
-            return resp['responseData']['translatedText']
+            return resp[0][0][0]
         except:
             return phrase
 
@@ -972,7 +975,6 @@ class NewBlogentryHandler(BaseRequestHandler):
         entrytype = self.request.get("entrytype")
         body_format = self.request.get("body_format")
         body = self.request.get("body")
-        diff = self.request.get("diff")
         #body_html = to_html(body,body_format)
         if key:
             try:
@@ -986,10 +988,12 @@ class NewBlogentryHandler(BaseRequestHandler):
                 if self.get_entry_from_slug(slug=slug):
                     slug += "-" + uuid.uuid4().hex[:4]
             entry.slug = slug
+            diff = self.request.get("diff")
             if diff:
-                sm= difflib.SequenceMatcher(None, entry.body, body)
-                entry.body = (show_diff(sm))#body
-                entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')#body_html
+                entry.body = body
+                body_html = to_html(entry.body,body_format)
+                sm= difflib.SequenceMatcher(None, entry.body_html, body_html)
+                entry.body_html = (show_diff(sm)).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
             else:
                 entry.body = body
                 entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')

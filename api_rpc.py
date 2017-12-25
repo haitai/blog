@@ -255,7 +255,6 @@ dispatcher = PlogXMLRPCDispatcher({
     })
 
 
-# {{{ Handlers
 class CallApi(BaseRequestHandler):
     def get(self):
         Logger(request = self.request.uri, response = '----------------------------------').put()

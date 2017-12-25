@@ -84,6 +84,9 @@ height:30px
 #new input[type=text] {
 width:300px
 }
+input[type=submit] {
+padding: 5px
+}
 .settings{text-transform:lowercase}
 table td {
 vertical-align:top

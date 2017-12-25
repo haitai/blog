@@ -47,6 +47,9 @@
 }
 /***************************************************************************************/
 /* first row of buttons */
+.markItUpHeader ul	{
+	display: inline-block;
+}
 .markItUpHeader ul li	{
 	list-style:none;
 	float:left;
