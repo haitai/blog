@@ -107,7 +107,7 @@ font: 14px/46px 'Trebuchet MS',Tahoma,Georgia;
 display: block;
 position: relative;
 }
-#menu li ul { display: none; }
+#menu li ul,.diff { display: none; }
 #menu li:hover ul{
 display: block;
 position: absolute;

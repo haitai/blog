@@ -990,6 +990,7 @@ class NewBlogentryHandler(BaseRequestHandler):
             entry.slug = slug
             diff = self.request.get("diff")
             if diff:
+                body_format = entry.body_format
                 entry.body = body
                 body_html = to_html(entry.body,body_format)
                 sm= difflib.SequenceMatcher(None, entry.body_html, body_html)
@@ -997,14 +998,14 @@ class NewBlogentryHandler(BaseRequestHandler):
             else:
                 entry.body = body
                 entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
-            if entrytype  != entry.entrytype:
+            if entrytype  and entrytype!= entry.entrytype:
                 if entrytype == "post":
                     self.update_tags_and_archives(entry,values=tags,add=True)
                 else:
                     self.update_tags_and_archives(entry,values=tags,remove=True)
-            if entrytype == entry.entrytype == "post":
+            if entrytype and entrytype == entry.entrytype == "post":
                 self.update_tags_and_archives(entry,values=tags,edit=True)
-
+            self.kill_entries_cache(slug=entry.slug)
             entry.entrytype = entrytype
             entry.updated = datetime.datetime.now() + datetime.timedelta(hours=blogconfig.UTC_OFFSET)
 

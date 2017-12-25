@@ -23,7 +23,7 @@
         <div class="seinpt"><p>{{w.name|lower}}</p>
         {{w}}</div><div style="clear:both"></div>
         {%endfor%}
-        {% if not diff %}
+        <div class="{% if diff %}diff{%endif%}">
             <div class="seinpt"><p>entrytype</p>
             <select id="entrytype" name="entrytype">
             {%if entry.entrytype== "post"%}
@@ -65,7 +65,7 @@
             <div class="seinpt"><p>tags</p>
             <input type="text" name="tags" value="{{ tags }}" title="Tags (comma-separated)"/>
             (Comma separated)</div><div style="clear:both"></div>
-            {%endif%}
+            </div>
             <div style="margin-top: 1em;">
                 <input type="submit" value="{% block submit_value %}Post{% endblock %}"/>
                 <a style="margin-left: .5em;" href="{% block cancel_link %}/{% endblock %}">Cancel</a>
