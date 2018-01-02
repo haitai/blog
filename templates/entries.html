@@ -59,7 +59,7 @@
             {% endif %}
 
             {% if entry.entrytype== 'comment' %}
-            <a name="{{entry.key.id}}"></a>
+            <a name="{{entry.key().id()}}"></a>
                 <div class="commentgravatar"><img height="50" width="50" class="avatar avatar-50" src="{{entry.author.email()|gravatar(50)}}" alt=""/></div>
                 <h2>
                     <a href="{{entry.link}}" class="comment_title">{{ entry.author.nickname()|hidenickname }}</a> {%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}

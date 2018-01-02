@@ -9,7 +9,7 @@
 <rights>Copyright ©  {{ config.NAME }}</rights>
 {% for entry in entries %}
 <entry>
-    <title>{% if entry.title %}{{ entry.title }}{%else%}{{entry.entrytype}} #{{entry.key.id}}{% endif %}</title>
+    <title>{% if entry.title %}{{ entry.title }}{%else%}{{entry.entrytype}} #{{entry.key().id()}}{% endif %}</title>
     <link rel="alternate" type="text/html" href="{{ config.BASEURL }}{{ entry.link }}" />
     <id>tag:{{ config.BASEURL }},{{ entry.published|date("%Y-%m-%d") }}:{{ entry.link }}</id>
     <published>{{ entry.published|date("%Y-%m-%d %H:%M") }}</published>

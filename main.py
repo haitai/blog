@@ -583,11 +583,11 @@ class BaseRequestHandler(webapp2.RequestHandler):
             f.add_item(
                 title=entry.title,
                 link=self.entry_link(entry, absolute=True),
-                description=entry.body,
+                description=entry.body_html,
                 author_name=entry.author.nickname() if entry.author else blogconfig.RPC_USERNAME,
                 pubdate=entry.published,
                 categories=entry.tags,
-                thumbnails=self.find_thumbnails(entry.body),
+                thumbnails=self.find_thumbnails(entry.body_html),
             )
         data = f.writeString("utf-8")
         self.response.headers["Content-Type"] = "application/atom+xml"
