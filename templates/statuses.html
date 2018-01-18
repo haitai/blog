@@ -9,7 +9,7 @@
 </div>
     {%if statuses%}
     {% for status in statuses %}
-        <div class="entry summary" id="{{status.key}}">
+        <div class="entry summary" id="{{status.key()}}">
         <a name="{{status.key().id()}}"></a>
                 <span class="status_title date">{{status.body|striptags}}</span>
             <span class="comment_date">

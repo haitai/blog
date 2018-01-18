@@ -35,7 +35,7 @@
         {%if logined %}
     <span class="signed-in">
       <div>
-        <a href="https://plus.google.com/me" class="email">{{logined.email()}}</a>
+        <a href="https://plus.google.com/me" class="email" title="{{logined.nickname()}}">{{logined.email()}}</a>
         <a href="/logout">Sign out</a>
       </div>
       <img src="{{logined.email()|gravatar(30)}}">

@@ -45,7 +45,6 @@ LINKS = [
     {"url": "https://www.huhaitai.com", "value": "www"},
     {"url":"https://t.huhaitai.com","value":"micro blog"},
 ]
-
 def jinja2_factory(app):
     j = jinja2.Jinja2(app)
     j.environment.filters.update({
@@ -223,6 +222,7 @@ class BlogConfig(db.Model):
     NAME = db.StringProperty(default="Hu Haitai")
     EMAIL = db.EmailProperty(default="huhaitai@huhaitai.com")
     SYNC_MAIL = db.EmailProperty()
+    ADMINS = db.StringProperty(default="huhaitai@huhaitai.com")
     BASEURL = db.StringProperty(default="http://jot.huhaitai.com") #ended without the slash
     FEED_SMITH = db.StringProperty()
     NUM_MAIN = db.IntegerProperty(default=13)
@@ -688,6 +688,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
         extra_context["last_updated"] = self.get_last_updated()
         extra_context["localit"] = os.environ['SERVER_SOFTWARE']
         extra_context["LINKS"] = LINKS
+        extra_context["ADMINS"] = blogconfig.ADMINS.split(",")
         extra_context["diff"] = self.request.get("diff")               
 
         rv = self.jinja2.render_template(template_file, **extra_context)
@@ -1118,6 +1119,7 @@ class BlogconfigHandler(BaseRequestHandler):
         blogconfig.EMAIL = self.request.get("EMAIL")
         if self.request.get("SYNC_MAIL"):
             blogconfig.SYNC_MAIL = self.request.get("SYNC_MAIL")
+        blogconfig.ADMINS = self.request.get("ADMINS")
         blogconfig.BASEURL = self.request.get("BASEURL")
         blogconfig.FEED_SMITH = self.request.get("FEED_SMITH")
         blogconfig.NUM_MAIN = int(self.request.get("NUM_MAIN"))

@@ -11,6 +11,7 @@ font: 14px 'Trebuchet MS',Tahoma,Georgia,serif,Helvetica, sans-serif !important;
 #collapsible.hover{border-color:#d3d9e5;border-width:1px;width:5px}
 #collapsible-arrow{width:4px;height:12px;background:url(/static/images/hide-arrow.gif) top left no-repeat;position:absolute;margin-left:-15px;display:none;z-index:5}
 #collapsible-arrow.collapsed{background:url(/static/images/show-arrow.gif) top left no-repeat;margin-left:17px}
+.admins{background:url(/static/images/mod.png) center right no-repeat;padding-right: 17px}
 #commentform textarea {
 width:100%;
 background:#f8f8f8;
