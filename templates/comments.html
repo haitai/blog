@@ -11,11 +11,11 @@
     {% for comment in comments %}
         <div class="entry summary" id="{{comment.key()}}">
         <a name="{{comment.key().id()}}"></a>
-            <div class="gravatar"><img height="64" width="64" class="avatar" src="{{comment.author.email()|gravatar(64)}}" alt=""/></div>
+            <div class="gravatar"><img height="72" width="72" class="avatar" src="{{comment.author.email()|gravatar(72)}}" alt=""/></div>
             <h2>
-                <a href="{{comment.link}}" class="entry_title" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{{ comment.author.nickname()|hidenickname }}</span></a></h2><span class="cmtdate">said {%if comment.to_title%}on "<a href="{{ comment.to_url }}">{{comment.to_title}}</a>"{%endif%} {{comment.published|bettertimesince}}{%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}</span>
+                <a href="{{comment.link}}" class="entry_title" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{{ comment.author.nickname()|hidenickname }}</span></a></h2><span class="cmtdate">{{comment.published|bettertimesince}}{%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}</span>
 
-            <div class="comments_body">
+            <div class="comments_body"><span class="cmtdate">said {%if comment.to_title%}on "<a href="{{ comment.to_url }}">{{comment.to_title}}</a>"{%endif%}</span>
                 {%if comment.body%}{{comment.body|striptags}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
             </div>
         </div>

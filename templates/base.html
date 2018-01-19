@@ -4,7 +4,14 @@
 <head>
    <title>{% block title %}{% endblock %}{{ config.TITLE }}</title>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-   <link rel="stylesheet" href="/static/css/reset-fonts-grids.css" type="text/css" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous" />
+   <!--[if lte IE 8]>
+   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css" />
+   <![endif]-->
+   <!--[if gt IE 8]><!-->
+   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css" />
+   <!--<![endif]-->
    <link href="/static/css/base.css" rel="stylesheet" type="text/css"/>
    <link href="/static/prettify/prettify.css" type="text/css" rel="stylesheet" />
    <link type="application/rsd+xml" rel="edituri" title="RSD" href="{{ config.BASEURL }}/rpc" />
@@ -19,18 +26,11 @@
    {% block extra_head %}{% endblock %}
 </head>
 <body>
-<div id="doc3" class="yui-t6">
-   <div id="hd">
-   <div id="header">
+<div>
+   <div id="hd" class="pure-g">
+   <div id="header"  class="pure-u-1">
    {% if on_entry %}<h2 id="logo">{% else %}<h1 id="logo">{% endif %}{% if config.TITLE %}<a href="/">{{ config.TITLE }}</a>{% endif %}{% if on_entry %}</h2>{% else %}</h1>{% endif %} <span class="feed"><a href="{%if config.FEED_SMITH %}{{config.FEED_SMITH}}{%else%}/feed{%endif%}"></a></span>   <div style="clear:both"></div>
-  {% block search %}
-            <div id="searchbox">
-              <form action="/search" id="gsearchbox">
-                  <input type="text" name="q" id="input_search" class="gsc-input" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}" />
-                  <input type="hidden" value="Search" />
-              </form>
-            </div>
-        {% endblock %}
+
    <div class="gc-social">
         {%if logined %}
     <span class="signed-in">
@@ -42,34 +42,35 @@
     </span>{%else%}<span class="signed-out">
       <a class="button" id="loginLink" href="/login">Sign in</a>
     </span>{%endif%}
-    
   </div>
-   <div id="menu"><ul >
+   <div id="menu">
+   <ul>
    <li class="item{% if on_homepage %} selected{% endif %}"><a href="/">Home</a></li>
    <li class="item{% if on_archive %} selected{% endif %}"><a href="/archives">Archives</a></li>
    <li class="item{% if on_comments %} selected{% endif %}"><a href="/comments">Comments</a></li>
    <li class="item{% if on_statuses %} selected{% endif %}"><a href="/saying">Saying</a></li>
-   {%if pages%}<li class="item{% if on_page %} selected{% endif %}" id="menuDiv"><a href="#" id="pagesdropdown">Pages</a>
-      <ul id="menuDivdropdown">{%for page in pages%}<li><a class="menuItem" href="{{page.link}}">{{page.title}}</a></li>{%endfor%}</ul></li>{%endif%}
    </ul></div>
    <div style="clear:both"></div>
    </div>
    </div>
-   <div id="bd">
-    <div id="yui-main">
-    <div class="yui-b"><div class="yui-g">
-    <div id="main" class="left">
-      {% block body %}{% endblock %}
+   <div id="bd" class="pure-g">
+   <div id="main" class="pure-u-1 pure-u-md-3-4">   
+      <div class="main">{% block body %}{% endblock %}</div>
     </div>
-    </div>
-</div>
-    </div>
-    <div class="yui-b">
-      <div id="sidebar" class="right">
-
-        {%block commentform%}
+    <div id="sidebar" class="pure-u-1 pure-u-md-1-4">
+    <div class="sidebar">
+           {%block commentform%}
         {% include "commentform.html" %}
         {%endblock%}
+            <div class="box">
+                <h3>Search</h3>
+  {% block search %}
+              <form action="/search" id="gsearchbox">
+                  <input type="text" name="q" id="input_search" class="gsc-input"/>
+                  <input type="hidden" value="Search" />
+              </form>
+        {% endblock %}
+            </div>
         {% if recent_entries and not on_new%}
             <div class="box">
                 <h3>Recent entries</h3>
@@ -133,15 +134,15 @@
     </div>
     </div>
     </div>
-   <div id="ft"><div id="footer">
-        <span id="footermeta">&copy; {{config.TITLE}} {%if last_updated%}- Last updated: {{last_updated|date("%X,%x")}}{%endif%}
+<div id="footer" class="pure-g">
+        <span id="footermeta" class="pure-u-1 pure-u-md-4-5">&copy;{%if last_updated%}Last updated: {{last_updated|date("%X,%x")}}{%endif%}
         <!--{% if config.EMAIL and config.NAME %}
         <a href="mailto:{{ config.EMAIL }}">{{ config.NAME }}</a> -
         {% endif %}-->
         {% if admin %}
             - <a class="new" href="/new">New</a> - <a href="/import_wp">Import</a> - <a href="/settings">Settings</a>{% endif %}
 </span>
-<span id="appengine"><a href="http://www.python.org/" title="Python Powered" class="python">Python</a><a href="http://code.google.com/appengine" title="Powered by Google App Engine" class="gae">Google Appengine</a></span></div></div>
+<span id="appengine" class="pure-u-1 pure-u-md-1-5"><a href="http://www.python.org/" title="Python Powered" class="python">Python</a><a href="http://code.google.com/appengine" title="Powered by Google App Engine" class="gae">Google Appengine</a></span></div>
 </div>
 
 {% if config.ANALYTICS and not admin %}

@@ -29,7 +29,7 @@
 {%if logined%}<a href="#" title="Reply this comment" class="reply" cid="{{comment.key().id()}}"> <img src="/static/images/reply.png" alt="Reply this comment"/> </a>{%endif%}<br />
                 <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
                 {%if comment.replycomments%}<div class="replycomments">{%for comment in comment.replycomments%}<a name="{{comment.key().id()}}"></a>
-<div class="gravatar"><img height="36" width="36" class="avatar" src="{{comment.author.email()|gravatar(36)}}" alt=""/></div>
+<div class="gravatar"><img height="48" width="48" class="avatar" src="{{comment.author.email()|gravatar(48)}}" alt=""/></div>
 <div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{{ comment.author.nickname()|hidenickname }}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
 <br />
 <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
@@ -46,7 +46,7 @@
             {% for comment in relatedcomments %}
                 <li class="comment">
                 <a name="{{comment.key().id()}}"></a>
-                <div class="gravatar"><img height="32" width="32" class="avatar" src="{{comment.author.email()|gravatar(32)}}" alt=""/></div>
+                <div class="gravatar"><img height="40" width="40" class="avatar" src="{{comment.author.email()|gravatar(40)}}" alt=""/></div>
                     <div><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{{ comment.author.nickname()|hidenickname }}</span></a></div>
                     <div class="body" title="{{ comment.published }}">{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
                     </div>

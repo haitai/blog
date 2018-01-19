@@ -11,7 +11,7 @@
     {% for status in statuses %}
         <div class="entry summary" id="{{status.key()}}">
         <a name="{{status.key().id()}}"></a>
-                <span class="status_title date">{{status.body|striptags}}</span>
+                <span class="status_title">{{status.body|striptags}}</span>
             <span class="comment_date">
                 <a href="{{status.link}}" class="">{{status.published|bettertimesince}}</a>{%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
             </span>

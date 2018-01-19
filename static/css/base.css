@@ -1,3 +1,4 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, select, p, blockquote, th, td {margin: 0;padding: 0}
 body {
 background:#f8f8f8;
 }
@@ -5,7 +6,7 @@ ins {color: #008800}
 del{color: #880000}
 body,input,textarea,#dsq-content {
 color:#000;
-font: 14px 'Trebuchet MS',Tahoma,Georgia,serif,Helvetica, sans-serif !important;
+font-family:'Trebuchet MS',Tahoma,Georgia,serif,Helvetica, sans-serif !important;
 }
 #collapsible{position:absolute;right:0;top:0;width:3px;height:100%;overflow:hidden;border:2px solid #f8f8f8;border-top:none;border-bottom:none;background:#eee;cursor:pointer}
 #collapsible.hover{border-color:#d3d9e5;border-width:1px;width:5px}
@@ -19,8 +20,8 @@ background:#f8f8f8;
 #commentform p{
 padding-top:15px
 }
-.replycomments{margin-left: 12px}
-.cmtdate{color: #666}
+.replycomments{margin-left: 50px}
+.cmtdate{color: #666;font-size: 80%}
 #doc3 {margin:0 !important}
 
 ::-moz-selection{background:#000;color:#f8f8f8;}
@@ -100,14 +101,16 @@ background:#f1f1f1;
 
 #menu {
 background: #444;float:left;width: 100%}
+#menu ul{margin: 0}
 
 #menu li {
 float: left;
 margin-bottom: 0;
-font: 14px/46px 'Trebuchet MS',Tahoma,Georgia;
+font: 16px/46px 'Trebuchet MS',Tahoma,Georgia;
 display: block;
 position: relative;
 }
+li{list-style: none;}
 #menu li ul,.diff { display: none; }
 #menu li:hover ul{
 display: block;
@@ -125,7 +128,7 @@ text-decoration: none;
 text-align: center;
 text-transform: lowercase;
 color: #fff;
-padding: 0 25px;
+padding-left: 25px;
 white-space: nowrap;
 }
 
@@ -185,17 +188,13 @@ text-decoration: underline
 background-position:-8px -104px;
 height:20px
 }
-#menuDiv:hover{background: #fff}
-#menuDiv:hover a{color: #000}
-#menuDivdropdown{display:none;background:#fff;position:absolute;right:0;top:46px;z-index: 2;box-shadow: 5px 5px 5px #ccc;-moz-box-shadow:5px 5px 5px #ccc;-webkit-box-shadow:5px 5px 5px #ccc}
-#menuDivdropdown a.menuItem{display:block;padding:0 25px;text-align:right;text-decoration:none}
-#menuDivdropdown a:hover{background: #fff}
 #logo {
 font-weight:400;
 float: left;
 padding: 25px 0 25px 25px;
-font-size:1.8em;
+font-size:1.6em;
 font-family:'Trebuchet MS',Tahoma,Georgia,"Times New Roman",Times,serif;
+margin: 0;
 }
 
 #logo a,#logo a:visited {
@@ -203,9 +202,8 @@ color:#000;
 text-decoration:none
 }
 
-#sidebar {
-padding-top:25px;
-padding-right:25px
+.sidebar {
+padding:25px;
 }
 
 .douban table td {
@@ -218,7 +216,7 @@ margin-bottom:1.5em
 }
 
 .box h3 {
-font-size:1.5em;
+font-size:1.3em;
 text-transform:lowercase;
 margin-bottom:.5em
 }
@@ -226,7 +224,7 @@ margin-bottom:.5em
 .box h3 a {
 color:#000;
 }
-
+#sidebar {background: #f6f6f6;}
 #sidebar .box .photo {
 margin-bottom:.5em
 }
@@ -239,7 +237,8 @@ padding:1px
 #sidebar .box ul {
 list-style:none;
 margin:0;
-padding:0
+padding:0;
+font-size: 95%
 }
 #sidebar ul li {
 margin: 0;
@@ -264,7 +263,7 @@ background-position: -8px -328px;
 font-size:8pt
 }
 
-#main {
+.main {
 padding:25px
 }
 
@@ -277,13 +276,13 @@ font-weight:400
 
 .entry.full {
 clear:both;
-padding-bottom:1.2em;
+padding-bottom:1.8em;
 margin-bottom:1.2em;
 border-bottom:1px solid #ddd
 }
 
 .entry.full a.entry_title,.entry.full span.entry_title,a.comment_title {
-font-size:1.7em;
+font-size:1em;
 text-transform:lowercase
 }
 
@@ -292,15 +291,14 @@ color:#000
 }
 
 .entry .post_date {
-margin-top:.5em;
+margin-top:1em;
 background-position:-8px -8px;
-font-size:95%
+font-size:80%
 }
-.comment_date,.comment_date a{font-size:100%}
+.comment_date,.comment_date a{font-size:80%}
 .entry.full .body,.comment_body {
-margin-bottom:.5em;
 line-height:1.7em;
-margin-top:.5em;
+margin-top:1em;
 }
 .comments_body{
 margin-bottom:.5em;
@@ -308,7 +306,7 @@ line-height:1.7em;
 }
 
 .entry.full .body p {
-margin:0 0 1em
+margin:0 0 2em
 }
 
 .entry.full .body h2 {
@@ -336,12 +334,12 @@ color:#666;
 .entry .meta a,.comment_date a{
 color:#666;
 background: #eee}
-.entry .meta{height: 20px;margin-top: 1.2em
+.entry .meta{margin-top: 1.2em;padding-bottom: 20px
 }
 
 .entry .tags,.entry .comments,.entry .shorturl{padding-right: 20px;float: left;}
 .entry .tags {
-background-position:-8px -264px;
+background-position:-8px -264px;margin-bottom: 10px
 }
 
 .tags .atag {
@@ -475,17 +473,16 @@ line-height:180%
 .navigation .next {
 float:right
 }
-#ft{background:#fff;
-border-top:1px solid #eee
-}
 #footer {
 color:#000;
-padding:25px 25px 50px 25px;
+padding:25px;
+background:#fff;
+border-top:1px solid #eee
 }
 #footer a{
 color:#000;
 }
-#appengine { float:right; text-indent:-9999px;width:215px}
+#appengine {text-indent:-9999px;width:215px}
 
 a.gae{
 background:url("/static/images/appengine.gif") no-repeat;
@@ -501,12 +498,8 @@ height:28px;
 width:70px;
 float:left}
 
-#footermeta{float:left}
+#footermeta{padding-bottom: 25px}
 
-#searchbox{   left: 270px;
-    position: absolute;
-    top: 25px;
-    width: 350px;}
 input.gsc-input {
 padding: 5px !important;
 height: auto !important;
@@ -527,6 +520,7 @@ text-decoration:none !important
 .gs-result .gs-title, .gs-result .gs-title * {
 color:#069 !important;
 }
+.cse .gsc-control-cse, .gsc-control-cse{padding: 0 !important}
 
 table.gsc-search-box td.gsc-input {
 }
@@ -536,7 +530,7 @@ display:none !important
 p,.infomessage {
 margin-bottom:1em
 }
-.infomessage{font-size:1.3em;text-transform:lowercase}
+.infomessage{font-size:1.2em;text-transform:lowercase}
 .error404{font-size: 8em}
 a:hover,#logo a:hover,#sidebar .box:hover h3 a {
 text-decoration:underline

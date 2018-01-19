@@ -17,7 +17,7 @@
 
             <div class="post_date">
                 <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
-                {% if entry.published == entry.updated %}{%else%}<span title="{{entry.updated}}" class="edit">Updated at {{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}
+                {% if entry.published == entry.updated %}{%else%}<span title="Updated at {{entry.updated}}" class="edit">{{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}
             </div>
             <div class="body">
                 {%if on_entry%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%endif%}
@@ -25,11 +25,11 @@
             <div class="meta">
             {% if entry.tags %}
                 <div class="tags">
-                    Posted in {{entry.tags|localelist|safe}}
+                    Tagged {{entry.tags|localelist|safe}}
                 </div>
             {% endif %}
             {%if on_entry%}
-            {%block shorturl%}<div class="shorturl">Permalink <a href="http://{{request.host}}/post/{{entry.key().id()}}" title="Permalink to {{entry.title}}">http://{{request.host}}/post/{{entry.key().id()}}</a></div>{%endblock%}
+            {%block shorturl%}<div class="shorturl">Permalink: <a href="https://{{request.host}}/post/{{entry.key().id()}}" title="Permalink to {{entry.title}}">{{entry.key().id()}}</a></div>{%endblock%}
             {%else%}
             {% if entry.koment %}<div class="comments">{%if entry.comments_count== 0%}No{%else%}{{entry.comments_count}}{%endif%} <a href="{{entry.link}}#comments">{%if entry.comments_count== 1%}comment{%else%}comments{%endif%}</a></div>{% else %}<span class="comments">Comments off</span>{% endif %}
             {%endif%}
@@ -51,7 +51,7 @@
 
                 <div class="post_date">
                     <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
-                    {%if admin%}{% if entry.published== entry.updated %}{%else%}<span title="{{entry.updated}}" class="edit">Updated at {{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}{%endif%}
+                    {%if admin%}{% if entry.published== entry.updated %}{%else%}<span title="Updated at {{entry.updated}}" class="edit">{{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}{%endif%}
                 </div>
                 <div class="body">
                     {%if on_page%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body_excerpt|safe }}{%endif%}{%endif%}
@@ -64,9 +64,9 @@
                 <h2>
                     <a href="{{entry.link}}" class="comment_title"><span class="{%if entry.author.email() in ADMINS%}admins{%endif%}">{{ entry.author.nickname()|hidenickname }}</span></a> {%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
                 </h2>
-                    <div class="post_date comment_date"> said {%if entry.to_title%}on "<a href="{{ entry.to_url }}" class="">{{entry.to_title}}</a>"{%endif%} <span title="{{ entry.published }}">{{entry.published|bettertimesince}}</span></div>
+                    <div class="post_date comment_date"><span title="{{ entry.published }}">{{entry.published|bettertimesince}}</span></div>
                 <div class="comment_body">
-                    {%if entry.body%}{{entry.body|striptags}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
+                     <span class="comment_date">said {%if entry.to_title%}on "<a href="{{ entry.to_url }}" class="">{{entry.to_title}}</a>"{%endif%}</span> {%if entry.body%}{{entry.body|striptags}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
                 </div>
             {% endif %}
             {% if entry.entrytype =='status' %}
