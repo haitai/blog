@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}{%if status%}saying #{{status.key().id()}}{%else%}Saying{%endif%} - {% endblock %}
+{% block title %}{%if status%}saying #{{status.key().id()}}{%else%}Sayings{%endif%} - {% endblock %}
 {% block extra_head %}<link rel="alternate" href="/statuses/feed" type="application/atom+xml" title="Statuses from {{ config.TITLE }}"/>{% endblock %}
 
 {% block body %}
 <div class="infomessage">
-    <a href="/">Home</a> &raquo; {%if status%}<a href="/saying">saying</a>{%else%}saying{%endif%}
+    <a href="/">Home</a> &raquo; {%if status%}<a href="/sayings">sayings</a>{%else%}sayings{%endif%}
 </div>
     {%if statuses%}
     {% for status in statuses %}
@@ -18,7 +18,7 @@
         </div>
     {% endfor %}
     {%else%}
-    <p>No saying here</p>
+    <p>No sayings here</p>
     {%endif%}
     {%if on_status%}{% include "commentform.html" %}{%endif%}
     

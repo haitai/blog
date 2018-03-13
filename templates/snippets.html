@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{%if snippet%}#{{snippet.slug}}{%else%}Snippets{%endif%} - {% endblock %}
+{% block extra_head %}<link rel="alternate" href="/snippets/feed" type="application/atom+xml" title="Snippets from {{ config.TITLE }}"/>{% endblock %}
+
+{% block body %}
+<div class="infomessage">
+    <a href="/">Home</a> &raquo; {%if snippet%}<a href="/snippets">snippets</a>{%else%}snippets{%endif%}
+</div>
+    {%if snippets%}
+    {% for snippet in snippets %}
+<div id="{{ snippet.key() }}" class="{% block entry_class %}entry snippet{% endblock %}">
+    <h3 class="snippettitle">{%if not on_snippet%}<a href="{{snippet.link}}" class="snippetlink">{{ snippet.title }}</a>{%else%}{{ snippet.title }}{%endif%}</h3><div class="snippetmeat">
+            <div class="post_date">
+                <span title="{{ snippet.published }}">{{ snippet.published|bettertimesince }}</span>
+                {% if snippet.published == snippet.updated %}{%else%}<span title="Updated at {{snippet.updated}}" class="edit buttonhide">{{snippet.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}{% if admin %}
+    <a class="edit" href="/edit/{{ snippet.key() }}">normal edit</a>
+    <a class="edit" href="/edit/{{ snippet.key() }}?diff=1">diff edit</a>
+    <a class="delete" href="#">delete</a>
+{% endif %}
+            </div>
+            <div class="js-select-button buttonhide">
+<form class="pure-form"><input type="text" id="c{{snippet.key().id()}}"" class="form-control" value="<script src=&quot;https://{{request.host}}{{snippet.link}}?act=embed&quot;></script>" readonly="">
+  <button class="pure-button btn copybutton" type="button" data-clipboard-target="#c{{snippet.key().id()}}"><img class="clippy" src="/static/images/clippy.svg" width="13" alt="Copy to clipboard" /></button></form>
+    </div>
+    </div>
+    <div id="code_frame">
+            <div id="code_buttons">
+                <span class="go_right">
+                    <a href="{{snippet.link}}?act=raw" target="new" class="buttonsm">raw</a><a href="{{snippet.link}}?act=dl" target="new" class="buttonsm">download</a><a class="buttonsm buttonhide copy" data-clipboard-target="#cc{{snippet.key().id()}}">copy</a>{% if snippet.source %}<a href="{{snippet.source}}" class="buttonsm">source</a>{% endif %}
+
+                </span>
+                <span class="h_640"><a href="{{snippet.link}}" class="buttonsm" style="margin:0">{{snippet.slug}}</a></span> {{snippet.body|filesizeformat}}
+            </div>
+            <div id="selectable">
+                <pre class="prettyprint linenums" id="cc{{snippet.key().id()}}">{{snippet.body}}</pre>
+            </div>
+    </div>    </div>
+
+    {% endfor %}
+    {%else%}
+    <p>No snippets here</p>
+    {%endif%}
+    {%if on_snippet%}{% include "commentform.html" %}{%endif%}
+    
+    <div class="navigation">
+        {% if previous %}
+                <a href="?start={{ previous }}" class="previous">&laquo; Previous</a>
+        {% endif %}
+        {% if offset %}
+                <a href="?start={{ next }}" class="next">Next &raquo;</a>
+        {% endif %}
+    </div>
+    
+{% endblock %}

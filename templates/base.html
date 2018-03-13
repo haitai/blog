@@ -5,12 +5,12 @@
    <title>{% block title %}{% endblock %}{{ config.TITLE }}</title>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
    <meta name="viewport" content="width=device-width, initial-scale=1" />
-   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous" />
+   <link rel="stylesheet" href="/static/css/pure-min.css" type="text/css"/>
    <!--[if lte IE 8]>
-   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css" />
+   <link rel="stylesheet" href="/static/css/grids-responsive-old-ie-min.css" />
    <![endif]-->
    <!--[if gt IE 8]><!-->
-   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css" />
+   <link rel="stylesheet" href="/static/css/grids-responsive-min.css" />
    <!--<![endif]-->
    <link href="/static/css/base.css" rel="stylesheet" type="text/css"/>
    <link href="/static/prettify/prettify.css" type="text/css" rel="stylesheet" />
@@ -19,8 +19,9 @@
    <link rel="alternate" href="{%if config.FEED_SMITH %}{{config.FEED_SMITH}}{%else%}/feed{%endif%}" type="application/atom+xml" title="{{ config.TITLE }}"/>
    <link rel="shortcut icon" href="/favicon.ico" />
    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="{{ config.TITLE }} Search"/>
-    <script type="text/javascript" src="/static/prettify/prettify.js"></script>
-    <script src="/static/javascript/jquery-1.3.1.min.js" type="text/javascript"></script>
+   <script type="text/javascript" src="/static/prettify/prettify.js"></script>
+   <script src="/static/javascript/jquery-1.3.1.min.js" type="text/javascript"></script>
+
    <script src="/static/javascript/base.js" type="text/javascript"></script>
    {% if config.WEBMASTER_VERIFICATION_CONTENT %}<meta name="google-site-verification" content="{{ config.WEBMASTER_VERIFICATION_CONTENT }}"/>{% endif %}
    {% block extra_head %}{% endblock %}
@@ -43,12 +44,13 @@
       <a class="button" id="loginLink" href="/login">Sign in</a>
     </span>{%endif%}
   </div>
-   <div id="menu">
-   <ul>
-   <li class="item{% if on_homepage %} selected{% endif %}"><a href="/">Home</a></li>
-   <li class="item{% if on_archive %} selected{% endif %}"><a href="/archives">Archives</a></li>
-   <li class="item{% if on_comments %} selected{% endif %}"><a href="/comments">Comments</a></li>
-   <li class="item{% if on_statuses %} selected{% endif %}"><a href="/saying">Saying</a></li>
+   <div id="menu" class="pure-menu pure-menu-horizontal pure-menu-scrollable">
+   <ul  class="pure-menu-list">
+   <li class="item pure-menu-item{% if on_homepage %} selected{% endif %}"><a href="/" class="pure-menu-link">Home</a></li>
+   <li class="item pure-menu-item{% if on_archive %} selected{% endif %}"><a href="/archives" class="pure-menu-link">Archives</a></li>
+   <li class="item pure-menu-item{% if on_comments %} selected{% endif %}"><a href="/comments" class="pure-menu-link">Comments</a></li>
+   <li class="item pure-menu-item{% if on_statuses %} selected{% endif %}"><a href="/sayings" class="pure-menu-link">Sayings</a></li>
+   <li class="item pure-menu-item{% if on_snippets %} selected{% endif %}"><a href="/snippets" class="pure-menu-link">Snippets</a></li>
    </ul></div>
    <div style="clear:both"></div>
    </div>
@@ -62,18 +64,20 @@
            {%block commentform%}
         {% include "commentform.html" %}
         {%endblock%}
+        {% if not on_new and not on_search%}
             <div class="box">
                 <h3>Search</h3>
-  {% block search %}
-              <form action="/search" id="gsearchbox">
+        {% block search %}
+              <form action="/search" id="gsearchbox" class="pure-form">
                   <input type="text" name="q" id="input_search" class="gsc-input"/>
                   <input type="hidden" value="Search" />
               </form>
         {% endblock %}
             </div>
+        {%endif%}
         {% if recent_entries and not on_new%}
             <div class="box">
-                <h3>Recent entries</h3>
+                <h3>Recent posts</h3>
                 <ul class="recent">
                 {% for entry in recent_entries %}
                     <li class="entry summary">
@@ -157,5 +161,34 @@
     </script>
 {% endif %}
 <script type="text/javascript">prettyPrint();</script>
+<script src="/static/javascript/clipboard.min.js" type="text/javascript"></script>
+<script src="/static/javascript/tooltips.js" type="text/javascript"></script>
+<script>
+var clipboardDemos=new ClipboardJS('.btn');
+clipboardDemos.on('success',
+    function(e){
+    e.clearSelection();
+    console.info('Action:',e.action);
+    console.info('Text:',e.text);
+    console.info('Trigger:',e.trigger);
+    showTooltip(e.trigger,'Copied!');});
+clipboardDemos.on('error',function(e){
+    console.error('Action:',e.action);
+    console.error('Trigger:',e.trigger);
+    showTooltip(e.trigger,fallbackMessage(e.action));});
+
+var clipboardDemos=new ClipboardJS('.copy');
+clipboardDemos.on('success',
+    function(e){
+    e.clearSelection();
+    console.info('Action:',e.action);
+    console.info('Text:',e.text);
+    console.info('Trigger:',e.trigger);
+    showTooltip1(e.trigger,'Copied!');});
+clipboardDemos.on('error',function(e){
+    console.error('Action:',e.action);
+    console.error('Trigger:',e.trigger);
+    showTooltip1(e.trigger,fallbackMessage(e.action));});
+</script>
 </body>
 </html>

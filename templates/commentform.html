@@ -2,18 +2,18 @@
             <h3>{%if not on_entry and not on_page %}
 {%if not logined %}<a href="/login" title="Signin with Google account">Signin</a> to comment{%else%}say something{%endif%}{%else%}{%if entry.koment%}{%if not logined %}<a href="/login" title="Signin with Google account">Signin</a> to comment{%else%}say something{%endif%}{%else%}Comments off{%endif%}{%endif%}</h3>
             {%if not on_entry and not on_page%}
-            {%if logined%}<form id="commentform" action="{%if on_new%}/poststatus{%else%}/postcomment{%endif%}" method="post">
+            {%if logined%}<form id="commentform" action="{%if on_new%}/poststatus{%else%}/postcomment{%endif%}" method="post" class="pure-form">
             <input type="hidden" name="to_url" value="{{ curturl }}" />
             <input type="hidden" name="to_title" value="{{ comment_title }}" />
-                <textarea id="content" width="100%"name="content" rows="3"></textarea>
-                <p><input name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /></p>
+                <textarea id="content" style="width:100%" name="content" rows="3"></textarea>
+                <p><input class="button-secondary pure-button" name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /></p>
             </form>{%endif%}
             {%else%}{%if entry.koment%}
-            {%if logined%}<form id="commentform" action="{%if on_new%}/poststatus{%else%}/postcomment{%endif%}" method="post">
+            {%if logined%}<form id="commentform" action="{%if on_new%}/poststatus{%else%}/postcomment{%endif%}" method="post"  class="pure-form">
             <input type="hidden" name="to_url" value="{{ curturl }}" />
             <input type="hidden" name="to_title" value="{{ comment_title }}" />
-                <textarea id="content" width="100%"name="content" rows="3"></textarea>
-                <p><input name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /></p>
+                <textarea id="content" style="width:100%" name="content" rows="3"></textarea>
+                <p><input class="button-secondary pure-button" name="submit" type="submit" id="submit" tabindex="5" value="{%if on_new%}Post status{%else%}Submit{%endif%}" /></p>
             </form>{%endif%}
             {%endif%}
             {%endif%}
@@ -24,13 +24,13 @@
             {% for comment in pagecomments %}
                 <li class="pagecomment">
                 <a name="{{comment.key().id()}}"></a>
-                <div class="gravatar"><img height="48" width="48" class="avatar" src="{{comment.author.email()|gravatar(48)}}" alt=""/></div>
-                <div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{{ comment.author.nickname()|hidenickname }}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
+                <div class="gravatar"><img height="42" width="42" class="avatar" src="{{comment.author.email()|gravatar(42)}}" alt=""/></div>
+                <div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{%if admin%}{{ comment.author.nickname() }}{%else%}{{ comment.author.nickname()|hidenickname }}{%endif%}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
 {%if logined%}<a href="#" title="Reply this comment" class="reply" cid="{{comment.key().id()}}"> <img src="/static/images/reply.png" alt="Reply this comment"/> </a>{%endif%}<br />
                 <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
                 {%if comment.replycomments%}<div class="replycomments">{%for comment in comment.replycomments%}<a name="{{comment.key().id()}}"></a>
-<div class="gravatar"><img height="48" width="48" class="avatar" src="{{comment.author.email()|gravatar(48)}}" alt=""/></div>
-<div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{{ comment.author.nickname()|hidenickname }}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
+<div class="gravatar"><img height="42" width="42" class="avatar" src="{{comment.author.email()|gravatar(42)}}" alt=""/></div>
+<div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{%if admin%}{{ comment.author.nickname() }}{%else%}{{ comment.author.nickname()|hidenickname }}{%endif%}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
 <br />
 <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
 
@@ -47,7 +47,7 @@
                 <li class="comment">
                 <a name="{{comment.key().id()}}"></a>
                 <div class="gravatar"><img height="40" width="40" class="avatar" src="{{comment.author.email()|gravatar(40)}}" alt=""/></div>
-                    <div><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{{ comment.author.nickname()|hidenickname }}</span></a></div>
+                    <div><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{%if admin%}{{ comment.author.nickname() }}{%else%}{{ comment.author.nickname()|hidenickname }}{%endif%}</span></a></div>
                     <div class="body" title="{{ comment.published }}">{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}
                     </div>
                 </li>
@@ -57,6 +57,6 @@
             {%endif%}
             {%endif%}
             </ul>
-            {%if not on_entry and not on_comment and not on_status and not on_page%}<p class="morecomments">{% if relatedcomments %}{%if not show_comments%}<a href="?show_comments=true">Read more comments...</a>{%else%}<a href="/comments">Read all comments...</a>{%endif%}{%else%}<a href="/comments">Read all comments...</a>{%endif%}</p>{%endif%}
+            {%if not on_entry and not on_comment and not on_status and not on_page and not on_snippet%}<p class="morecomments">{% if relatedcomments %}{%if not show_comments%}<a href="?show_comments=true">Read more comments...</a>{%else%}<a href="/comments">Read all comments...</a>{%endif%}{%else%}<a href="/comments">Read all comments...</a>{%endif%}</p>{%endif%}
             {%endif%}
         </div>

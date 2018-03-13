@@ -9,15 +9,6 @@
 <div class="infomessage">
     <a href="/">Home</a> &raquo; archives
 </div>
-
-    {% if all_tags %}
-        <div class="box tags">
-            <h3>Tags</h3>
-            {% for tag in all_tags %}
-                <span class="atag"><a href="/tag/{{ tag.name }}">{{ tag.name }}</a>{% if config.SHOW_ENTRYCOUNT %} <span class="entrycount">({{tag.entrycount}})</span>{% endif %}</span>
-            {% endfor %}
-        </div>
-    {% endif %}
     {% if all_months %}
         <div class="box months">
             <h3>Archives</h3><ul>
@@ -25,6 +16,14 @@
                 <li class="month"><div><a onclick="toggle(this);" href="javascript:void(0);" class="closed-button"></a> <a href="{{ month.link() }}" class="montha">{{ month.monthyear }}</a>{% if config.SHOW_ENTRYCOUNT %} <span class="entrycount">({{month.entrycount}})</span>{% endif %}</div>
                     <ul class="month_entries">{%for entry in month.entries%}<li>{{entry.day}}: <a href="{{ entry.link }}" class="entry_title">{{ entry.title }}</a>  <span class="entrycount">({{entry.comments_count}})</span></li>{%endfor%}</ul></li>
             {% endfor %}</ul>
+        </div>
+    {% endif %}
+    {% if all_tags %}
+        <div class="box tags">
+            <h3>Tags</h3>
+            {% for tag in all_tags %}
+                <span class="atag"><a href="/tag/{{ tag.name }}">{{ tag.name }}</a>{% if config.SHOW_ENTRYCOUNT %} <span class="entrycount">({{tag.entrycount}})</span>{% endif %}</span>
+            {% endfor %}
         </div>
     {% endif %}
     {% if pages%}

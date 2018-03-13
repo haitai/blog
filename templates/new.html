@@ -18,7 +18,7 @@
       $("#body").markItUp(mySettings);
    });
 </script>
-    <form id="new" method="post">
+    <form id="new" method="post" class="pure-form pure-form-aligned">
         {% for w in form %}
         <div class="seinpt"><p>{{w.name|lower}}</p>
         {{w}}</div><div style="clear:both"></div>
@@ -35,6 +35,11 @@
             <option selected="selected" value="page">page</option>
             {%else%}
             <option value="page">page</option>
+            {%endif%}
+            {%if entry.entrytype== "snippet"%}
+            <option selected="selected" value="snippet">snippet</option>
+            {%else%}
+            <option value="snippet">snippet</option>
             {%endif%}
             </select>
             </div><div style="clear:both"></div>
@@ -67,7 +72,7 @@
             (Comma separated)</div><div style="clear:both"></div>
             </div>
             <div style="margin-top: 1em;">
-                <input type="submit" value="{% block submit_value %}Post{% endblock %}"/>
+                <input type="submit" value="{% block submit_value %}Post{% endblock %}" class="pure-button pure-button-primary"/>
                 <a style="margin-left: .5em;" href="{% block cancel_link %}/{% endblock %}">Cancel</a>
             </div>
     </form>

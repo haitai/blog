@@ -40,6 +40,9 @@ from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 import webapp2
 from webapp2_extras import jinja2
 import filters
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 LINKS = [
     {"url": "https://www.huhaitai.com", "value": "www"},
@@ -57,6 +60,7 @@ def jinja2_factory(app):
         'urlencode ':filters.urlencode_filter,
         'bettermonth':filters.bettermonth,
         'hidenickname':filters.hidenickname,
+        'filesizeformat':filters.do_filesizeformat,
     })
     j.environment.globals.update({
         'uri_for': webapp2.uri_for,
@@ -152,7 +156,7 @@ class Blogentry(db.Model):
     updated = db.DateTimeProperty(auto_now_add=True)
     tags = db.ListProperty(db.Category)
     koment = db.BooleanProperty(default=True) #allow comment
-    entrytype = db.StringProperty(multiline=False,default='post',choices=['post','comment','status','page'])
+    entrytype = db.StringProperty(multiline=False,default='post',choices=['post','comment','status','page','snippet'])
     #is_published = db.BooleanProperty(default="True")
     _relatepost=None
 
@@ -173,6 +177,8 @@ class Blogentry(db.Model):
             return '/comment/' + str(self.key().id())
         elif self.entrytype == 'status':
             return '/saying/' + str(self.key().id())
+        elif self.entrytype == 'snippet':
+            return '/snippet/' + str(self.slug)
         else:
             return '/page/' + self.slug
 
@@ -619,7 +625,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def render_statuses_feed(self, statuses):
         f = MediaRSSFeed(
             title=blogconfig.TITLE + ' Statuses',
-            link="http://" + self.request.host + "/saying",
+            link="http://" + self.request.host + "/sayings",
             description='Statuses from'+ blogconfig.TITLE,
             language="en",
         )
@@ -862,6 +868,35 @@ class SingelStatusPageHandler(BaseRequestHandler):
         }
         self.render("status.html", extra_context)
 
+class SingelSnippetPageHandler(BaseRequestHandler):
+    def head(self, slug):
+        snippet = self.get_entry_from_slug(slug=slug)
+        if not snippet:
+            self.error(404)
+
+    def get(self,slug):
+        snippet = self.get_entry_from_slug(slug=slug)
+        if not snippet:
+            return self.raise_error(404)
+        act = self.request.get('act')
+        if act == 'raw':
+            self.response.headers["Content-Type"] = "text/plain; charset=utf-8"
+        if act == 'dl':
+            self.response.headers["Content-Type"] = "application/octet-stream"
+        if act == 'embed':
+            s=snippet.body
+            ss=s.splitlines()
+        else:
+            ss=None
+        extra_context = {
+            "snippets": [snippet], # So we can use the same template for everything
+            "snippet": snippet, # To easily pull out the title
+            "comment_title":"#%s" %snippet.slug,
+            "ss":ss,
+            "on_snippet":True,
+        }
+        self.render("snippet.html" if not act else "snippet_%s.html"%act, extra_context)
+
 class FeedRedirectHandler(BaseRequestHandler):
     def get(self,type=None):
         if type:
@@ -941,6 +976,26 @@ class StatusesPageHandler(BaseRequestHandler):
         }
         self.render("statuses.html", extra_context)
 
+class SnipptsPageHandler(BaseRequestHandler):
+    def get(self):
+        offset = self.get_integer_argument("start", 0)
+        if not offset:
+            snippets = self.get_items(entrytype='snippet')
+        else:
+            snippets = db.Query(Blogentry).filter('entrytype =','snippet').order("-published").fetch(limit=blogconfig.NUM_MAIN,
+                offset=offset)
+        if not snippets and offset > 0:
+            return self.redirect("/snippets")
+        extra_context = {
+            "snippets": snippets,
+            "next": max(offset - blogconfig.NUM_MAIN, 0),
+            "previous": offset + blogconfig.NUM_MAIN if len(snippets) == blogconfig.NUM_MAIN else None,
+            "offset": offset,
+            "on_snippets":True,
+            "comment_title":"Snippets",
+        }
+        self.render("snippets.html", extra_context)
+
 class NewBlogentryHandler(BaseRequestHandler):
     def get_tags_argument(self, name):
         tags = self.request.get(name, "").split(",")
@@ -984,21 +1039,33 @@ class NewBlogentryHandler(BaseRequestHandler):
             except db.BadKeyError:
                 return self.raise_error(404)
             entry.title = self.request.get("title")
-            slug = str(slugify(self.request.get("slug")))
-            if slug != entry.slug:
-                if self.get_entry_from_slug(slug=slug):
-                    slug += "-" + uuid.uuid4().hex[:4]
+            if entrytype != "snippet":
+                slug = str(slugify(self.request.get("slug")))
+                if slug != entry.slug:
+                    if self.get_entry_from_slug(slug=slug):
+                        slug += "-" + uuid.uuid4().hex[:4]
+            else:
+                slug = str(self.request.get("slug"))
+                if slug != entry.slug:
+                    if self.get_entry_from_slug(slug=slug):
+                        slug = uuid.uuid4().hex[:4] + "-" + slug
             entry.slug = slug
             diff = self.request.get("diff")
             if diff:
                 body_format = entry.body_format
                 entry.body = body
-                body_html = to_html(entry.body,body_format)
+                if entrytype != "snippet":
+                    body_html = to_html(entry.body,body_format)
+                else:
+                    body_html = entry.body
                 sm= difflib.SequenceMatcher(None, entry.body_html, body_html)
                 entry.body_html = (show_diff(sm)).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
             else:
                 entry.body = body
-                entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
+                if entrytype != "snippet":
+                    entry.body_html = to_html(entry.body,body_format).replace("&amp;","&").replace("&gt;",">").replace("&lt;","<").replace('&nbsp;',' ')
+                else:
+                    entry.body_html = entry.body
             if entrytype  and entrytype!= entry.entrytype:
                 if entrytype == "post":
                     self.update_tags_and_archives(entry,values=tags,add=True)
@@ -1013,18 +1080,28 @@ class NewBlogentryHandler(BaseRequestHandler):
         else:
             slug = self.request.get("slug")
             if slug:
-                slug = str(slugify(self.request.get("slug")))
+                if entrytype != "snippet":
+                    slug = str(slugify(self.request.get("slug")))
+                else:
+                    slug = str(self.request.get("slug"))
             else:
                 slug = str(slugify(self.request.get("title")))
             if not slug:
                 slug = self.translate('zh-CN','en',self.request.get("title"))
                 slug = str(slugify(slug))
             if self.get_entry_from_slug(slug=slug):
-                slug += "-" + uuid.uuid4().hex[:4]
+                if entrytype != "snippet":
+                    slug += "-" + uuid.uuid4().hex[:4]
+                else:
+                    slug = uuid.uuid4().hex[:4] + "-" + slug
+            if entrytype == "snippet":
+                body_html = body
+            else:
+                body_html = to_html(body,body_format)
             entry = Blogentry(
                 author=users.get_current_user(),
                 body=self.request.get("body"),
-                body_html = to_html(body,body_format),#body_html,
+                body_html = body_html,
                 title=self.request.get("title"),
                 slug=slug,
             )
@@ -1442,13 +1519,15 @@ application = webapp2.WSGIApplication([
     ("/archives/?", ArchivesPageHandler),
     ("/([\w-]+)/feed/?", FeedRedirectHandler),
     ("/comments/?", CommentsPageHandler),
-    ("/saying/?", StatusesPageHandler),
+    ("/sayings/?", StatusesPageHandler),
+    ("/snippets/?", SnipptsPageHandler),
     ("/delete/?", DeleteBlogentryHandler),
     ("/deleteitem/?", DeleteItemHandler),
     ("/edit/([\w-]+)/?", NewBlogentryHandler),
     ("/post/([\w-]+)/?", EntryIdRedirectHandler),
     ("/comment/([\w-]+)/?", SingelCommentPageHandler),
     ("/saying/([\w-]+)/?", SingelStatusPageHandler),
+    ("/snippet/(?P<slug>.*)/?", SingelSnippetPageHandler),
     ("/page/(?P<slug>.*)/?", SingelPagePageHandler),
     ("/new/?", NewBlogentryHandler),
     ("/postcomment/?", PostComment),

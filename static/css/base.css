@@ -60,14 +60,17 @@ a.external {
 background:url(/static/images/external.png) no-repeat;
 margin-left:10px;
 padding-left:10px;
-}
+} 
+.entry.full h1 a.external {margin-left: 0}
 a.new,a.new:visited {
 color:green;
 background-position:-8px -168px
 }
 
 a.edit,span.edit {
-background-position:-8px -232px
+background-position:-8px -232px;
+display: inline-block;
+height: 20px;
 }
 
 a.delete ,a.deletecomment{
@@ -83,12 +86,6 @@ vertical-align:middle;
 height:30px
 }
 
-#new input[type=text] {
-width:300px
-}
-input[type=submit] {
-padding: 5px
-}
 .settings{text-transform:lowercase}
 table td {
 vertical-align:top
@@ -100,14 +97,12 @@ background:#f1f1f1;
 }
 
 #menu {
-background: #444;float:left;width: 100%}
-#menu ul{margin: 0}
+background: #444;float:left;width: 100%;padding: 0}
+#menu ul{margin: 0 0 0 10px}
 
 #menu li {
-float: left;
 margin-bottom: 0;
 font: 16px/46px 'Trebuchet MS',Tahoma,Georgia;
-display: block;
 position: relative;
 }
 li{list-style: none;}
@@ -128,12 +123,13 @@ text-decoration: none;
 text-align: center;
 text-transform: lowercase;
 color: #fff;
-padding-left: 25px;
+padding: 0 15px;
 white-space: nowrap;
 }
 
 #menu a:hover {
-text-decoration: underline
+text-decoration: none;
+background: #000
 }
 .gc-social {
     font-size: 12px;
@@ -212,7 +208,7 @@ padding:2px
 }
 
 .box,.entry.summary{
-margin-bottom:1.5em
+margin-bottom:1.2em
 }
 
 .box h3 {
@@ -248,7 +244,6 @@ background-position:-8px -296px;
 #sidebar ul li.comment{padding-left:0}
 #sidebar ul.links li,.shorturl{
 background-position: -8px -134px;
-margin-bottom:5px
 }
 #sidebar ul.recent li{
 background-position: -8px -296px;
@@ -276,7 +271,7 @@ font-weight:400
 
 .entry.full {
 clear:both;
-padding-bottom:1.8em;
+padding-bottom:1em;
 margin-bottom:1.2em;
 border-bottom:1px solid #ddd
 }
@@ -289,11 +284,13 @@ text-transform:lowercase
 .entry.full a.entry_title,.entry.full a.entry_title:visited,.entry.full span.entry_title,.entry.summary a.entry_title,.infomessage a,a.comment_title,.comment_date a {
 color:#000
 }
-
+.entry.full h1 span.entry_title{font-size: 0.75em}
 .entry .post_date {
 margin-top:1em;
 background-position:-8px -8px;
-font-size:80%
+font-size:80%;
+display: inline-block;
+height: 20px;
 }
 .comment_date,.comment_date a{font-size:80%}
 .entry.full .body,.comment_body {
@@ -325,22 +322,23 @@ line-height:190%
 }
 p.morecomments{
 text-align:right;
+font-size: 90%
 }
 .entry .meta,.comment_date,.post_date{
 color:#666;
 }
 .entrycount{color:#999;font-size:10px
 }
-.entry .meta a,.comment_date a{
+.snippetcomments{margin-left:20px }
+.entry .meta a,.comment_date a,.comments a{
 color:#666;
-background: #eee}
-.entry .meta{margin-top: 1.2em;padding-bottom: 20px
-}
+border-bottom: 1px dotted}
+.entry .meta{}
 
-.entry .tags,.entry .comments,.entry .shorturl{padding-right: 20px;float: left;}
+.entry .tags,.entry .comments,.entry .shorturl{
+    padding-right: 20px;font-size: 80%;height: 24px;display: inline-block;}
 .entry .tags {
-background-position:-8px -264px;margin-bottom: 10px
-}
+background-position:-8px -264px;}
 
 .tags .atag {
 margin-right:5px
@@ -375,7 +373,7 @@ font-size:11pt
 }
 
 .entry:hover a.hidden {
-display:inline
+display:inline !important
 }
 .entry ul {
 margin-bottom:1em;
@@ -415,13 +413,14 @@ padding-top:5px
 }
 .status_title{
 background:url("/static/images/quote.png") no-repeat;
-padding-left:20px;}
+padding-left:20px;
+line-height: 1.7em;}
 ul li {
 margin-bottom:.3em
 }
 
 pre,blockquote {
-margin:1em 0;
+margin:1.2em 0;
 padding:.5em
 }
 
@@ -435,10 +434,11 @@ margin-bottom:0 !important
 
 pre {
 word-wrap:break-word;
-border:1px solid #bbb !important;
+border:0px !important;
 overflow:hidden;
 color:#f0f0f0;
-font-family:Courier New,Courier,monospace
+font:90% Consolas,Menlo,Monaco,"Lucida Console","Liberation Mono","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace,serif;
+background: #eee
 }
 .entry th,td{text-align:left;vertical-align:top}
 .entry table{margin:1em 0 0 1px;border:1px solid;border-color:#bbb;border-spacing:0;border-collapse:collapse;clear:right;line-height:125%}
@@ -531,7 +531,7 @@ p,.infomessage {
 margin-bottom:1em
 }
 .infomessage{font-size:1.2em;text-transform:lowercase}
-.error404{font-size: 8em}
+.error404{font-size: 6em}
 a:hover,#logo a:hover,#sidebar .box:hover h3 a {
 text-decoration:underline
 }
@@ -575,7 +575,81 @@ background-position:-8px -264px;
 #tagcloud li.t4 a {font-size:120%; }
 #tagcloud li.t5 a {font-size:130%; }
 .seinpt{margin-bottom: 10px}
-.seinpt p{width:300px;float: left;font-size: 13px}
+.seinpt p{width:30%;float: left;}
 .seinpt input{width: 400px;padding: 4px}
 .section h2{margin-bottom: 2em !important}
 .save input{font-size: 14px}
+.pure-form select{padding: 0 0.6em}
+#code_frame {
+    background-color: #fff;
+    font-size: 90%;
+    overflow: auto;
+    padding: 0;
+    border:1px solid #ddd;
+    margin-bottom: 1.2em
+}
+#code_frame pre {
+background-color: #fff;
+padding: 0;margin: 0;
+line-height: 150%
+}
+#code_buttons {
+    border-bottom: 1px solid #ddd;
+    font-size: .85em;
+    background: #F7F7F7;
+    text-align: left;
+    padding: 6px 8px 4px;
+}
+.go_right {
+    float: right;
+    text-align: right;
+}
+a.buttonsm {
+    background-color: #ddd;
+    border-bottom: 2px solid #ccc;
+    border-left: 0;
+    border-radius: 3px;
+    border-right: 0;
+    border-top: 0;
+    color: #000;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "segoe ui","trebuchet MS","Lucida Sans Unicode","Lucida Sans",Sans-Serif;
+    font-size: 12px;
+    font-weight: 400;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    text-decoration: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    padding: 0 6px;
+    opacity: .75;
+    margin: 0 0 0 8px;
+}
+@media (max-width: 820px){
+.buttonhide,a.buttonhide {
+    display: none !important;
+}}
+a.snippetlink{color: #000}
+.snippet{margin-bottom: 2em}
+h3.snippettitle{margin-bottom: 1.2em}
+li.L0, li.L1, li.L2, li.L3,
+li.L5, li.L6, li.L7, li.L8
+{ list-style-type: decimal !important }
+.js-select-button{float: right;}
+input.form-control {
+    padding: .3em .6em !important;
+    border-color: #E6E6E6 !important;
+    border-radius: 0 !important;
+}
+.copybutton{margin-left: -5px}
+.tooltipped{position:relative}
+.tooltipped:after{position:absolute;z-index:1000000;display:none;padding:5px 8px;font:normal normal 11px/1.5 Helvetica,arial,nimbussansl,liberationsans,freesans,clean,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";color:#fff;text-align:center;text-decoration:none;text-shadow:none;text-transform:none;letter-spacing:normal;word-wrap:break-word;white-space:pre;pointer-events:none;content:attr(aria-label);background:rgba(0,0,0,.8);border-radius:3px;-webkit-font-smoothing:subpixel-antialiased}
+.tooltipped:before{position:absolute;z-index:1000001;display:none;width:0;height:0;color:rgba(0,0,0,.8);pointer-events:none;content:"";border:5px solid transparent}
+.tooltipped:hover:before,.tooltipped:hover:after,.tooltipped:active:before,.tooltipped:active:after,.tooltipped:focus:before,.tooltipped:focus:after{display:inline-block;text-decoration:none}
+.tooltipped-s:after,.tooltipped-se:after,.tooltipped-sw:after{top:100%;right:50%;margin-top:5px}
+.tooltipped-s:before,.tooltipped-se:before,.tooltipped-sw:before{top:auto;right:50%;bottom:-5px;margin-right:-5px;border-bottom-color:rgba(0,0,0,.8)}
+.tooltipped-s:after,.tooltipped-n:after{-webkit-transform:translateX(50%);-ms-transform:translateX(50%);transform:translateX(50%)}
+.tooltipped-w:after{right:100%;bottom:50%;margin-right:5px;-webkit-transform:translateY(50%);-ms-transform:translateY(50%);transform:translateY(50%)}
+.tooltipped-w:before{top:50%;bottom:50%;left:-5px;margin-top:-5px;border-left-color:rgba(0,0,0,.8)}

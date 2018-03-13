@@ -29,11 +29,12 @@
                 </div>
             {% endif %}
             {%if on_entry%}
-            {%block shorturl%}<div class="shorturl">Permalink: <a href="https://{{request.host}}/post/{{entry.key().id()}}" title="Permalink to {{entry.title}}">{{entry.key().id()}}</a></div>{%endblock%}
+            {%block shorturl%}<div class="shorturl">Permalink: <a href="/post/{{entry.key().id()}}" title="Permalink to {{entry.title}}">/post/{{entry.key().id()}}</a></div>{%endblock%}
             {%else%}
-            {% if entry.koment %}<div class="comments">{%if entry.comments_count== 0%}No{%else%}{{entry.comments_count}}{%endif%} <a href="{{entry.link}}#comments">{%if entry.comments_count== 1%}comment{%else%}comments{%endif%}</a></div>{% else %}<span class="comments">Comments off</span>{% endif %}
+            {% if entry.koment %}<div class="comments">{%if entry.comments_count== 0%}No{%else%}{{entry.comments_count}}{%endif%} <a href="{{entry.link}}#comments">{%if entry.comments_count== 1%}comment{%else%}comments{%endif%}</a></div>{% else %}<div class="comments">Comments off</div>{% endif %}
             {%endif%}
             </div>
+            <div style="clear:both;"></div>
             {% endif %}
             {% if entry.entrytype=='page' %}
                 {% if on_page %}
@@ -62,7 +63,7 @@
             <a name="{{entry.key().id()}}"></a>
                 <div class="commentgravatar"><img height="50" width="50" class="avatar avatar-50" src="{{entry.author.email()|gravatar(50)}}" alt="{%if entry.author.email() in ADMINS%}He is an administrator.{%endif%}"/></div>
                 <h2>
-                    <a href="{{entry.link}}" class="comment_title"><span class="{%if entry.author.email() in ADMINS%}admins{%endif%}">{{ entry.author.nickname()|hidenickname }}</span></a> {%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
+                    <a href="{{entry.link}}" class="comment_title"><span class="{%if entry.author.email() in ADMINS%}admins{%endif%}">{%if admin%}{{ entry.author.nickname() }}{%else%}{{ entry.author.nickname()|hidenickname }}{%endif%}</span></a> {%if admin%} <a class="deletecomment hidden" href="#">delete</a>{%endif%}
                 </h2>
                     <div class="post_date comment_date"><span title="{{ entry.published }}">{{entry.published|bettertimesince}}</span></div>
                 <div class="comment_body">
@@ -73,6 +74,31 @@
             <a name="{{entry.key().id()}}"></a>
                     <span class="status_title">{{ entry.body|striptags }}</span>
                     <span class="comment_date"><a href="{{entry.link}}"><span title="{{ entry.published }}">{{entry.published|bettertimesince}}</span></a>  {%if admin%} <a class="hidden deletecomment" href="#">delete</a>{%endif%}</span>
+            {% endif %}
+
+            {% if entry.entrytype== 'snippet' %}
+    <h3>{%if not on_snippet%}<a href="{{entry.link}}" class="snippetlink">{{ entry.title }}</a>{%else%}{{ entry.title }}{%endif%}</h3>
+            <div class="post_date">
+                <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
+                {% if entry.published == entry.updated %}{%else%}<span title="Updated at {{entry.updated}}" class="edit buttonhide">{{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}{% if entry.koment %}<div class="comments snippetcomments">{%if entry.comments_count== 0%}No{%else%}{{entry.comments_count}}{%endif%} <a href="{{entry.link}}#comments">{%if entry.comments_count== 1%}comment{%else%}comments{%endif%}</a></div>{% else %}<div class="comments">Comments off</div>{% endif %}{% if admin %}
+    <a class="edit" href="/edit/{{ entry.key() }}">normal edit</a>
+    <a class="edit" href="/edit/{{ entry.key() }}?diff=1">diff edit</a>
+    <a class="delete" href="#">delete</a>
+{% endif %}
+
+            </div>
+    <div id="code_frame">
+            <div id="code_buttons">
+                <span class="go_right">
+                    <a href="{{entry.link}}?act=raw" target="new" class="buttonsm">raw</a><a href="{{entry.link}}?act=dl" target="new" class="buttonsm">download</a><a class="buttonsm buttonhide copy" data-clipboard-target="#cc{{entry.key().id()}}">copy</a>{% if entry.source %}<a href="{{entry.source}}" class="buttonsm">source</a>{% endif %}
+
+                </span>
+                <span class="h_640"><a href="{{entry.link}}" class="buttonsm" style="margin:0">{{entry.slug}}</a></span> {{entry.body|filesizeformat}}
+            </div>
+            <div id="selectable">
+                <pre class="prettyprint linenums" id="cc{{entry.key().id()}}">{{entry.body}}</pre>
+            </div>
+    </div> 
             {% endif %}
         </div>
     {% endfor %}

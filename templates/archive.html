@@ -14,13 +14,14 @@
                 </span>
             </h2>
             <div class="body">
-                {{ entry.body|striptags|contentshortor(100) }}
+                {{ entry.body|striptags|contentshortor(140) }}
             </div>
             {% if entry.tags %}
                 <div class="meta"><div class="tags">
                     Tagged {{entry.tags|localelist|safe}}
                 </div></div>
             {% endif %}
+            <div style="clear:both;"></div>
         </div>
     {% endfor %}
 {% endblock %}
