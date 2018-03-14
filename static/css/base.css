@@ -329,16 +329,15 @@ color:#666;
 }
 .entrycount{color:#999;font-size:10px
 }
-.snippetcomments{margin-left:20px }
 .entry .meta a,.comment_date a,.comments a{
-color:#666;
-border-bottom: 1px dotted}
+color:#666;}
 .entry .meta{}
 
 .entry .tags,.entry .comments,.entry .shorturl{
     padding-right: 20px;font-size: 80%;height: 24px;display: inline-block;}
 .entry .tags {
 background-position:-8px -264px;}
+.entry .snippetcomments{margin-left:20px;font-size: 100% }
 
 .tags .atag {
 margin-right:5px
@@ -580,6 +579,7 @@ background-position:-8px -264px;
 .section h2{margin-bottom: 2em !important}
 .save input{font-size: 14px}
 .pure-form select{padding: 0 0.6em}
+.pure-menu-link:focus{background-color: #000}
 #code_frame {
     background-color: #fff;
     font-size: 90%;

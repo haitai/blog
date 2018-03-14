@@ -90,7 +90,7 @@
     <div id="code_frame">
             <div id="code_buttons">
                 <span class="go_right">
-                    <a href="{{entry.link}}?act=raw" target="new" class="buttonsm">raw</a><a href="{{entry.link}}?act=dl" target="new" class="buttonsm">download</a><a class="buttonsm buttonhide copy" data-clipboard-target="#cc{{entry.key().id()}}">copy</a>{% if entry.source %}<a href="{{entry.source}}" class="buttonsm">source</a>{% endif %}
+                    <a href="{{entry.link}}?act=raw" target="new" class="buttonsm">raw</a><a href="{{entry.link}}?act=dl" target="new" class="buttonsm">download</a><a class="buttonsm buttonhide copy" data-clipboard-target="#cc{{entry.key().id()}}">copy</a>{% if entry.source %}<a href="{{entry.source}}" target="new" class="buttonsm">source</a>{% endif %}
 
                 </span>
                 <span class="h_640"><a href="{{entry.link}}" class="buttonsm" style="margin:0">{{entry.slug}}</a></span> {{entry.body|filesizeformat}}
