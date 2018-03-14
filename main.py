@@ -378,6 +378,8 @@ class BaseRequestHandler(webapp2.RequestHandler):
                 entries = db.Query(Blogentry).filter('entrytype =',entrytype).order("-published").fetch(blogconfig.NUM_COMMENTS)
             elif entrytype == 'status':
                 entries = db.Query(Blogentry).filter('entrytype =',entrytype).order("-published").fetch(blogconfig.NUM_STATUSES)
+            elif entrytype == 'snippet':
+                entries = db.Query(Blogentry).filter('entrytype =',entrytype).order("-published").fetch(blogconfig.NUM_MAIN)
             else:
                 entries = db.Query(Blogentry).filter('entrytype =',entrytype).order("-published").fetch(999)
             memcache.set(key, list(entries))
@@ -581,7 +583,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def render_feed(self, entries):
         f = MediaRSSFeed(
             title=blogconfig.TITLE,
-            link="http://" + self.request.host + "/",
+            link=blogconfig.BASEURL + "/",
             description=blogconfig.TITLE,
             language="en",
         )
@@ -602,7 +604,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def render_comments_feed(self, comments):
         f = MediaRSSFeed(
             title=blogconfig.TITLE + ' Comments',
-            link="http://" + self.request.host + "/comments",
+            link=blogconfig.BASEURL + "/comments",
             description='Comments from'+ blogconfig.TITLE,
             language="en",
         )
@@ -613,7 +615,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
                 comment_body = '<i>This comment content removed by the blog administrator.</i>'
             f.add_item(
                 title=comment.to_title if comment.to_title else r"[NO TITLE]",
-                link="http://" + self.request.host + comment.to_url + '#' + str(comment.key().id()),
+                link=blogconfig.BASEURL + comment.to_url + '#' + str(comment.key().id()),
                 description=comment_body,
                 author_name=comment.author.nickname(),
                 pubdate=comment.published,
@@ -625,17 +627,36 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def render_statuses_feed(self, statuses):
         f = MediaRSSFeed(
             title=blogconfig.TITLE + ' Statuses',
-            link="http://" + self.request.host + "/sayings",
+            link=blogconfig.BASEURL + "/sayings",
             description='Statuses from'+ blogconfig.TITLE,
             language="en",
         )
         for status in statuses[:10]:
             f.add_item(
                 title=status.body,
-                link="http://" + self.request.host + '/saying/' + str(status.key().id()),
+                link=blogconfig.BASEURL + '/saying/' + str(status.key().id()),
                 description=status.body,
                 author_name=status.author.nickname(),
                 pubdate=status.published,
+            )
+        data = f.writeString("utf-8")
+        self.response.headers["Content-Type"] = "application/atom+xml"
+        self.response.out.write(data)
+
+    def render_snippets_feed(self, snippets):
+        f = MediaRSSFeed(
+            title=blogconfig.TITLE + ' Snippets',
+            link=blogconfig.BASEURL + "/snippets",
+            description='Snippets from'+ blogconfig.TITLE,
+            language="en",
+        )
+        for snippet in snippets[:10]:
+            f.add_item(
+                title=snippet.body,
+                link=blogconfig.BASEURL + '/snippet/' + str(snippet.slug),
+                description=snippet.body,
+                author_name=snippet.author.nickname(),
+                pubdate=snippet.published,
             )
         data = f.writeString("utf-8")
         self.response.headers["Content-Type"] = "application/atom+xml"
@@ -669,6 +690,9 @@ class BaseRequestHandler(webapp2.RequestHandler):
             elif type == 'statuses':
                 statuses = self.get_items(entrytype='status')
                 return self.render_statuses_feed(statuses)
+            elif type == 'snippets':
+                snippets = self.get_items(entrytype='snippet')
+                return self.render_snippets_feed(snippets)         
             else:
                 if "feed_entries" in extra_context:
                     return self.render_feed(extra_context["feed_entries"])
@@ -703,7 +727,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def entry_link(self, entry, query_args={}, absolute=False):
         url =  entry.link
         if absolute:
-            url = "http://" + self.request.host + url
+            url = blogconfig.BASEURL + url
         if query_args:
             url += "?" + urllib.urlencode(query_args)
         return url

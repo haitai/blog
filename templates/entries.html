@@ -19,7 +19,7 @@
                 <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
                 {% if entry.published == entry.updated %}{%else%}<span title="Updated at {{entry.updated}}" class="edit">{{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}
             </div>
-            <div class="body">
+            <div class="body clamp-ellipsis">
                 {%if on_entry%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%endif%}
             </div>
             <div class="meta">
@@ -54,7 +54,7 @@
                     <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
                     {%if admin%}{% if entry.published== entry.updated %}{%else%}<span title="Updated at {{entry.updated}}" class="edit">{{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}{%endif%}
                 </div>
-                <div class="body">
+                <div class="body clamp-ellipsis">
                     {%if on_page%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body_excerpt|safe }}{%endif%}{%endif%}
                 </div>
             {% endif %}
@@ -96,7 +96,7 @@
                 <span class="h_640"><a href="{{entry.link}}" class="buttonsm" style="margin:0">{{entry.slug}}</a></span> {{entry.body|filesizeformat}}
             </div>
             <div id="selectable">
-                <pre class="prettyprint linenums" id="cc{{entry.key().id()}}">{{entry.body}}</pre>
+                <pre class="prettyprint linenums clamp-ellipsis" id="cc{{entry.key().id()}}">{{entry.body}}</pre>
             </div>
     </div> 
             {% endif %}
