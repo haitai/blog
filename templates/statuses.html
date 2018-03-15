@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}{%if status%}saying #{{status.key().id()}}{%else%}Sayings{%endif%} - {% endblock %}
-{% block extra_head %}<link rel="alternate" href="/statuses/feed" type="application/atom+xml" title="Statuses from {{ config.TITLE }}"/>{% endblock %}
+{% block extra_head %}<link rel="alternate" href="/sayings/feed" type="application/atom+xml" title="Sayings from {{ config.TITLE }}"/>{% endblock %}
 
 {% block body %}
 <div class="infomessage">

@@ -605,7 +605,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
         f = MediaRSSFeed(
             title=blogconfig.TITLE + ' Comments',
             link=blogconfig.BASEURL + "/comments",
-            description='Comments from'+ blogconfig.TITLE,
+            description='Comments from '+ blogconfig.TITLE,
             language="en",
         )
         for comment in comments[:10]:
@@ -626,14 +626,14 @@ class BaseRequestHandler(webapp2.RequestHandler):
 
     def render_statuses_feed(self, statuses):
         f = MediaRSSFeed(
-            title=blogconfig.TITLE + ' Statuses',
-            link=blogconfig.BASEURL + "/sayings",
-            description='Statuses from'+ blogconfig.TITLE,
+            title=blogconfig.TITLE + ' sayings',
+            link=blogconfig.BASEURL + "/Sayings",
+            description='Sayings from '+ blogconfig.TITLE,
             language="en",
         )
         for status in statuses[:10]:
             f.add_item(
-                title=status.body,
+                title='saying: #'+str(status.key().id()),
                 link=blogconfig.BASEURL + '/saying/' + str(status.key().id()),
                 description=status.body,
                 author_name=status.author.nickname(),
@@ -647,14 +647,14 @@ class BaseRequestHandler(webapp2.RequestHandler):
         f = MediaRSSFeed(
             title=blogconfig.TITLE + ' Snippets',
             link=blogconfig.BASEURL + "/snippets",
-            description='Snippets from'+ blogconfig.TITLE,
+            description='Snippets from '+ blogconfig.TITLE,
             language="en",
         )
         for snippet in snippets[:10]:
             f.add_item(
-                title=snippet.body,
+                title=snippet.slug,
                 link=blogconfig.BASEURL + '/snippet/' + str(snippet.slug),
-                description=snippet.body,
+                description='<pre><code>' +snippet.body+ '</code></pre>',
                 author_name=snippet.author.nickname(),
                 pubdate=snippet.published,
             )
@@ -687,7 +687,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
             if type == 'comments':
                 comments = self.get_items(entrytype='comment')
                 return self.render_comments_feed(comments)
-            elif type == 'statuses':
+            elif type == 'sayings':
                 statuses = self.get_items(entrytype='status')
                 return self.render_statuses_feed(statuses)
             elif type == 'snippets':
