@@ -43,13 +43,14 @@
       <a class="button" id="loginLink" href="/login">Sign in</a>
     </span>{%endif%}
   </div>
-   <div id="menu" class="pure-menu pure-menu-horizontal pure-menu-scrollable">
+   <div id="menu" class="pure-menu pure-menu-horizontal">
    <ul  class="pure-menu-list">
    <li class="item pure-menu-item{% if on_homepage %} selected{% endif %}"><a href="/" class="pure-menu-link">Home</a></li>
    <li class="item pure-menu-item{% if on_archive %} selected{% endif %}"><a href="/archives" class="pure-menu-link">Archives</a></li>
    <li class="item pure-menu-item{% if on_comments %} selected{% endif %}"><a href="/comments" class="pure-menu-link">Comments</a></li>
    <li class="item pure-menu-item{% if on_statuses %} selected{% endif %}"><a href="/sayings" class="pure-menu-link">Sayings</a></li>
    <li class="item pure-menu-item{% if on_snippets %} selected{% endif %}"><a href="/snippets" class="pure-menu-link">Snippets</a></li>
+   <li class="toggle item pure-menu-item"><a href="javascript:void(0);" id="toggle" class="icon" onclick="togglemenu()"><s class="bar"></s><s class="bar"></s></a></li>
    </ul></div>
    <div style="clear:both"></div>
    </div>

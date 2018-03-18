@@ -50,3 +50,15 @@ function toggle(button) {
         }).removeClass().addClass('open month_entries');
     }
 }
+
+function togglemenu() {
+    var x = document.getElementById("menu");
+    var y = document.getElementById('toggle');
+    if (x.className === "pure-menu pure-menu-horizontal") {
+        x.className += " responsive";
+        y.className += ' x';
+    } else {
+        x.className = "pure-menu pure-menu-horizontal";
+        y.className = 'icon';
+    }
+}

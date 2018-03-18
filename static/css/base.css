@@ -97,13 +97,59 @@ background:#f1f1f1;
 }
 
 #menu {
-background: #444;float:left;width: 100%;padding: 0}
-#menu ul{margin: 0 0 0 10px}
+background: #444;float:left;width: 100%;padding-right: 25px;}
+#menu ul{margin: 0 0 0 10px;width: 100%;}
 
 #menu li {
 margin-bottom: 0;
 font: 16px/46px 'Trebuchet MS',Tahoma,Georgia;
 position: relative;
+float: left;
+}
+#menu li.toggle{float: right;display: none;}
+.bar {
+  background-color: #fff;
+  display: block;
+  width: 20px;
+  height: 3px;
+  border-radius: 100px;
+  position: absolute;
+  top: 23px;
+  right: 7px;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.bar:first-child {
+  -webkit-transform: translateY(-6px);
+  -moz-transform: translateY(-6px);
+  -ms-transform: translateY(-6px);
+  transform: translateY(-6px);
+}
+
+.x .bar {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.x .bar:first-child {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+@media screen and (max-width: 800px) {
+  #menu li:not(:first-child) {display: none;}
+  #menu li.toggle {float: right;display: inline-block;}
+  #menu li.selected a{background: none !important}
+  #menu li.toggle a,#menu.responsive li.toggle a{width:35px;height: 46px;display:block;padding: 0}
+  #menu.responsive li {float: none;display: block;}
+  #menu.responsive li a{text-align: left;padding: 0 0 0 15px  }
+  #menu.responsive .toggle {position: absolute;right: 0;top: 0;}
 }
 li{list-style: none;}
 #menu li ul,.diff { display: none; }
@@ -627,7 +673,7 @@ a.buttonsm {
     opacity: .75;
     margin: 0 0 0 8px;
 }
-@media (max-width: 820px){
+@media (max-width: 800px){
 .buttonhide,a.buttonhide {
     display: none !important;
 }}
