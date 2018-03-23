@@ -74,7 +74,7 @@ def admin(method):
             if self.request.method == "GET":
                 return self.redirect(users.create_login_url(self.request.uri))
             return self.error(403)
-        elif not users.is_current_user_admin():
+        elif not users.is_current_user_admin() and not user.email() in ADMINS:
             return self.error(403)
         else:
             return method(self, *args, **kwargs)
@@ -250,6 +250,8 @@ if not blogconfig:
 
 BlogentryForm=model_form(Blogentry,exclude=('to_url', 'to_title','body_format','entrytype','body_html'))
 BlogconfigForm=model_form(BlogConfig)
+ADMINS = blogconfig.ADMINS.split(",")
+
 class Archive(db.Model):
     monthyear = db.StringProperty(multiline=False) #September 2008
     year = db.StringProperty(multiline=False) #2008
@@ -626,8 +628,8 @@ class BaseRequestHandler(webapp2.RequestHandler):
 
     def render_statuses_feed(self, statuses):
         f = MediaRSSFeed(
-            title=blogconfig.TITLE + ' sayings',
-            link=blogconfig.BASEURL + "/Sayings",
+            title=blogconfig.TITLE + ' Sayings',
+            link=blogconfig.BASEURL + "/sayings",
             description='Sayings from '+ blogconfig.TITLE,
             language="en",
         )
@@ -683,6 +685,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def render(self, template_file, extra_context={}):
         format = self.request.get("format", None)
         type = self.request.get("type", None)
+        user = users.get_current_user()
         if format == "atom":
             if type == 'comments':
                 comments = self.get_items(entrytype='comment')
@@ -701,8 +704,11 @@ class BaseRequestHandler(webapp2.RequestHandler):
                 return self.render_json(extra_context["feed_entries"])
         extra_context["request"] = self.request
         extra_context["curturl"] = self.request.path
-        extra_context["admin"] = users.is_current_user_admin()
-        extra_context["logined"] = users.get_current_user()
+        if user:
+            extra_context["admin"] = users.is_current_user_admin() or user.email() in ADMINS
+        else:
+            extra_context["admin"] = False
+        extra_context["logined"] = user
         extra_context["config"] = blogconfig
         extra_context["recent_entries"] = self.get_archive_entries(meta='recent')
         show_comments = self.request.get("show_comments", False)
@@ -718,7 +724,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
         extra_context["last_updated"] = self.get_last_updated()
         extra_context["localit"] = os.environ['SERVER_SOFTWARE']
         extra_context["LINKS"] = LINKS
-        extra_context["ADMINS"] = blogconfig.ADMINS.split(",")
+        extra_context["ADMINS"] = ADMINS
         extra_context["diff"] = self.request.get("diff")               
 
         rv = self.jinja2.render_template(template_file, **extra_context)

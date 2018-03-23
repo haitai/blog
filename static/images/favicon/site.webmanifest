@@ -1,0 +1,19 @@
+{
+    "name": "Haitai Hub",
+    "short_name": "Haitai Hub",
+    "icons": [
+        {
+            "src": "/static/images/favicon/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/static/images/favicon/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#f1f1f1",
+    "background_color": "#f1f1f1",
+    "display": "standalone"
+}

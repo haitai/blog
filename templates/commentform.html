@@ -1,4 +1,4 @@
-        <div class="box"><a name="comments"></a>
+        <div class="box"><a name="comments" id="commenthere"></a>
             <h3>{%if not on_entry and not on_page %}
 {%if not logined %}<a href="/login" title="Signin with Google account">Signin</a> to comment{%else%}say something{%endif%}{%else%}{%if entry.koment%}{%if not logined %}<a href="/login" title="Signin with Google account">Signin</a> to comment{%else%}say something{%endif%}{%else%}Comments off{%endif%}{%endif%}</h3>
             {%if not on_entry and not on_page%}
@@ -26,7 +26,7 @@
                 <a name="{{comment.key().id()}}"></a>
                 <div class="gravatar"><img height="42" width="42" class="avatar" src="{{comment.author.email()|gravatar(42)}}" alt=""/></div>
                 <div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{%if admin%}{{ comment.author.nickname() }}{%else%}{{ comment.author.nickname()|hidenickname }}{%endif%}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
-{%if logined%}<a href="#" title="Reply this comment" class="reply" cid="{{comment.key().id()}}"> <img src="/static/images/reply.png" alt="Reply this comment"/> </a>{%endif%}<br />
+{%if logined%}<a title="Reply this comment" class="reply" cid="{{comment.key().id()}}"> <img src="/static/images/reply.png" alt="Reply this comment"/> </a>{%endif%}<br />
                 <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
                 {%if comment.replycomments%}<div class="replycomments">{%for comment in comment.replycomments%}<a name="{{comment.key().id()}}"></a>
 <div class="gravatar"><img height="42" width="42" class="avatar" src="{{comment.author.email()|gravatar(42)}}" alt=""/></div>

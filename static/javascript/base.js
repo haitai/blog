@@ -33,10 +33,10 @@ $(document).ready(function() {
         to_title = "comment #" + cid
         $("input[name='to_url']").val(to_url);
         $("input[name='to_title']").val(to_title);
-        $("textarea")[0].focus();
+        $("textarea[name='content']").focus();
+        $('html, body').animate({scrollTop: $('#commenthere').offset().top}, 1000)
 
     });
-
 });
 
 function toggle(button) {
