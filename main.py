@@ -191,7 +191,7 @@ class Blogentry(db.Model):
         if len(sc)>1:
             return sc[0]+u' <p class="more"><a href="%s#more">%s</a></p>'%(self.link,more)
         else:
-            return sc[0]
+            return None
 
     @property
     def next(self):

@@ -24,12 +24,12 @@
             {% for comment in pagecomments %}
                 <li class="pagecomment">
                 <a name="{{comment.key().id()}}"></a>
-                <div class="gravatar"><img height="42" width="42" class="avatar" src="{{comment.author.email()|gravatar(42)}}" alt=""/></div>
+                <div class="gravatar"><img height="50" width="50" class="avatar" src="{{comment.author.email()|gravatar(50)}}" alt=""/></div>
                 <div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{%if admin%}{{ comment.author.nickname() }}{%else%}{{ comment.author.nickname()|hidenickname }}{%endif%}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
 {%if logined%}<a title="Reply this comment" class="reply" cid="{{comment.key().id()}}"> <img src="/static/images/reply.png" alt="Reply this comment"/> </a>{%endif%}<br />
                 <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>
                 {%if comment.replycomments%}<div class="replycomments">{%for comment in comment.replycomments%}<a name="{{comment.key().id()}}"></a>
-<div class="gravatar"><img height="42" width="42" class="avatar" src="{{comment.author.email()|gravatar(42)}}" alt=""/></div>
+<div class="gravatar"><img height="50" width="50" class="avatar" src="{{comment.author.email()|gravatar(50)}}" alt=""/></div>
 <div class="commentbody"><a href="{{comment.link}}" {%if comment.author.email() in ADMINS%}title="He is an administrator."{%endif%}><span class="{%if comment.author.email() in ADMINS%}admins{%endif%}">{%if admin%}{{ comment.author.nickname() }}{%else%}{{ comment.author.nickname()|hidenickname }}{%endif%}</span></a> <span class="cmtdate">{{comment.published|bettertimesince}}</span>
 <br />
 <p>{%if comment.body %}{{comment.body|striptags|contentshortor(50)}}{%else%}<i>This comment content removed by the blog administrator.</i>{%endif%}</p>

@@ -455,7 +455,8 @@ float:right;margin-left:5px;
 }
 .gravatar img,.commentgravatar img{border:1px solid #999;}
 ul.relatedcomments li.pagecomment .commentbody p{
-padding-top:5px
+padding-top:8px;
+line-height: 1.7em
 }
 .status_title{
 background:url("/static/images/quote.png") no-repeat;
@@ -630,7 +631,7 @@ background-position:-8px -264px;
 .section h2{margin-bottom: 2em !important}
 .save input{font-size: 14px}
 .pure-form select{padding: 0 0.6em}
-.pure-menu-link:focus{background-color: #000}
+.pure-menu-link:focus{background-color: #444}
 #code_frame {
     background-color: #fff;
     font-size: 90%;
@@ -706,3 +707,13 @@ input.form-control {
 .tooltipped-s:after,.tooltipped-n:after{-webkit-transform:translateX(50%);-ms-transform:translateX(50%);transform:translateX(50%)}
 .tooltipped-w:after{right:100%;bottom:50%;margin-right:5px;-webkit-transform:translateY(50%);-ms-transform:translateY(50%);transform:translateY(50%)}
 .tooltipped-w:before{top:50%;bottom:50%;left:-5px;margin-top:-5px;border-left-color:rgba(0,0,0,.8)}
+.readmore-mask,.readmore-code-mask {
+    position: relative;
+    background: -moz-linear-gradient(bottom,rgba(255,255,255,.1),rgba(255,255,255,0));
+    background: -o-linear-gradient(bottom,rgba(255,255,255,.1),rgba(255,255,255,0));
+    width: auto;
+    height: 150px;
+    margin-top: -150px;
+}
+.readmore-code-mask{background: -webkit-gradient(linear,0 top,0 bottom,from(rgba(255,255,255,0)),to(#fff));}
+.readmore-mask{background: -webkit-gradient(linear,0 top,0 bottom,from(rgba(255,255,255,0)),to(#f8f8f8));}

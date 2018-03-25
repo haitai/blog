@@ -19,9 +19,10 @@
                 <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
                 {% if entry.published == entry.updated %}{%else%}<span title="Updated at {{entry.updated}}" class="edit">{{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}
             </div>
-            <div class="body clamp-ellipsis">
-                {%if on_entry%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%endif%}
+            <div class="body{%if not entry.body_excerpt%} clamp-ellipsis{%endif%}">
+                {%if on_entry%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{%if entry.body_excerpt%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body_html|safe}}{%endif%}{%else%}{{ entry.body|safe }}{%endif%}{%endif%}
             </div>
+            {%if on_homepage%}{%if not entry.body_excerpt%}<div class="readmore-mask"></div>{%endif%}{%endif%}
             <div class="meta">
             {% if entry.tags %}
                 <div class="tags">
@@ -54,9 +55,10 @@
                     <span title="{{ entry.published }}">{{ entry.published|bettertimesince }}</span>
                     {%if admin%}{% if entry.published== entry.updated %}{%else%}<span title="Updated at {{entry.updated}}" class="edit">{{entry.updated|date("%H:%M %p, %b %d")}}</span>{% endif %}{%endif%}
                 </div>
-                <div class="body clamp-ellipsis">
-                    {%if on_page%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body_excerpt|safe }}{%endif%}{%endif%}
-                </div>
+                <div class="body{%if not entry.body_excerpt%} clamp-ellipsis{%endif%}">
+                {%if on_page%}{%if entry.body_html%}{{entry.body_html|safe}}{%else%}{{ entry.body|safe }}{%endif%}{%else%}{%if entry.body_html%}{%if entry.body_excerpt%}{{entry.body_excerpt|safe}}{%else%}{{ entry.body_html|safe}}{%endif%}{%else%}{{ entry.body|safe }}{%endif%}{%endif%}
+            </div>
+            {%if on_homepage%}{%if not entry.body_excerpt%}<div class="readmore-mask"></div>{%endif%}{%endif%}
             {% endif %}
 
             {% if entry.entrytype== 'comment' %}
@@ -97,6 +99,7 @@
             </div>
             <div id="selectable">
                 <pre class="prettyprint linenums clamp-ellipsis" id="cc{{entry.key().id()}}">{{entry.body}}</pre>
+                {%if on_homepage%}<div class="readmore-code-mask"></div>{%endif%}
             </div>
     </div> 
             {% endif %}
