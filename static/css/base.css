@@ -150,6 +150,7 @@ float: left;
   #menu li.toggle a,#menu.responsive li.toggle a{width:35px;height: 46px;display:block;padding: 0}
   #menu.responsive li {float: none;display: block;}
   #menu.responsive li a{text-align: left;padding: 0 0 0 15px  }
+  #menu li a:hover {background: #444}
   #menu.responsive .toggle {position: absolute;right: 0;top: 0;}
 }
 li{list-style: none;}

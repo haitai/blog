@@ -804,6 +804,7 @@ class DeleteItemHandler(BaseRequestHandler):
             memcache.delete("entries/main/%d" % blogconfig.NUM_MAIN)
             memcache.delete("comment/archive")
             memcache.delete("status/archive")
+            memcache.delete("snippet/archive")
             memcache.delete("page/archive")
             memcache.delete("entry/id/%s" %item.key().id())
             memcache.delete("entry/slug/%s" %item.slug)
@@ -1203,7 +1204,7 @@ class PostStatus(BaseRequestHandler):
         s.published += datetime.timedelta(hours=blogconfig.UTC_OFFSET)
         s.updated = s.published
         s.put()
-        memcache.delete("statuses/archive")
+        memcache.delete("status/archive")
         self.kill_entries_cache()
         self.redirect(self.request.headers['referer'])
 
